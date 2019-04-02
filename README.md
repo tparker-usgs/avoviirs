@@ -9,8 +9,8 @@ Environment variables
 ---------------------
 I look to the environment for my bootstrap config. I require three enironrment variables.
   * _RSPROCESSING_BASE_ local filesystem path of my working directory
-  * _MIRROR_GINA_CONFIG_ Local filesystem path of the configuration file.
   * _CU_CONFIG_URL_ URL to a configupdater configuration file.
+  * _AVOVIIRS_CONFIG_ Local filesystem path of the configuration file.
 
 If authentication is required to retrieve the configupdater configuration it must be specified in the environment.
   * _CU_USER_ Username, if required to retrieve configupdater config file.

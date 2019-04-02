@@ -5,6 +5,10 @@ avoviirs
 
 Docker container to process VIIRS data at AVO
 
+Data directory
+--------------
+I expect to find a writable directory to work in to be mounted at /rsdata
+
 Environment variables
 ---------------------
 I look to the environment for my bootstrap config. I require three enironrment variables.

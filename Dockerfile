@@ -7,4 +7,4 @@ WORKDIR /app
 COPY trollconfig trollconfig
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/local/bin/supervisord"]

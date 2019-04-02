@@ -1,2 +1,0 @@
-posttroll
-pytroll-collectors

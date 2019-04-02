@@ -1,7 +1,4 @@
-FROM tparkerusgs/avorsprocessor:release-1.0.0
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+FROM tparkerusgs/avorsprocessor:release-1.2.0
 
 WORKDIR /app
 COPY trollconfig trollconfig

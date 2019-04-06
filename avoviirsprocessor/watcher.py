@@ -2,6 +2,7 @@ from posttroll.subscriber import Subscribe
 import tomputils.util as tutil
 
 def main():
+    logger = tutil.setup_logging("viirswatcher errors")
     nameserver = tutil.get_env_var('NAMESERVER')
     topic = "pytroll://AVO/viirs/granule"
     with Subscribe('', topic, True, nameserver=nameserver) as sub:

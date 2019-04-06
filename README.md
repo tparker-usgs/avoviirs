@@ -1,7 +1,7 @@
-avoviirs
+avoviirsprocessor
 ============
-[![Build Status](https://travis-ci.org/tparker-usgs/avoviirs.svg?branch=master)](https://travis-ci.org/tparker-usgs/avoviirs)
-[![Code Climate](https://codeclimate.com/github/tparker-usgs/avoviirs/badges/gpa.svg)](https://codeclimate.com/github/tparker-usgs/avoviirs)
+[![Build Status](https://travis-ci.org/tparker-usgs/avoviirsprocessor.svg?branch=master)](https://travis-ci.org/tparker-usgs/avoviirsprocessor)
+[![Code Climate](https://codeclimate.com/github/tparker-usgs/avoviirsprocessor/badges/gpa.svg)](https://codeclimate.com/github/tparker-usgs/avoviirsprocessor)
 
 Docker container to process VIIRS data at AVO
 

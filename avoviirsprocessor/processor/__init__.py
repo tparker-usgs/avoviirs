@@ -15,13 +15,14 @@ Process VIIRS data at AVO
     http://creativecommons.org/publicdomain/zero/1.0/
 """
 
-from btdprocessor import BTDProcessor
-from ir108hrprocessor import IR108HRProcessor
-from ir108processor import IR108Processor
-from mirprocessor import MIRProcessor
-from truecolorprocessor import TrueColorProcessor
-from visprocessor import VisProcessor
+from avoviirsprocessor.processor.btdprocessor import BTDProcessor
+from avoviirsprocessor.processor.ir108hrprocessor import IR108HRProcessor
+from avoviirsprocessor.processor.ir108processor import IR108Processor
+from avoviirsprocessor.processor.mirprocessor import MIRProcessor
+from avoviirsprocessor.processor.truecolorprocessor import TrueColorProcessor
+from avoviirsprocessor.processor.visprocessor import VisProcessor
+from avoviirsprocessor.processor.processor import Processor, processor_factory
 
 __all__ = ['BTDProcessor', 'BTDProcessor', 'IR108HRProcessor',
            'IR108Processor', 'MIRProcessor', 'TrueColorProcessor',
-           'VisProcessor']
+           'VisProcessor', 'Processor', 'processor_factory']

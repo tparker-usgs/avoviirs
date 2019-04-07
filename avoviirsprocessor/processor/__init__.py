@@ -21,8 +21,8 @@ from avoviirsprocessor.processor.ir108processor import IR108Processor
 from avoviirsprocessor.processor.mirprocessor import MIRProcessor
 from avoviirsprocessor.processor.truecolorprocessor import TrueColorProcessor
 from avoviirsprocessor.processor.visprocessor import VisProcessor
-from avoviirsprocessor.processor.abstractprocessor import AbstractProcessor, processor_factory
+from avoviirsprocessor.processor.abstractprocessor import processor_factory
 
 __all__ = ['BTDProcessor', 'BTDProcessor', 'IR108HRProcessor',
            'IR108Processor', 'MIRProcessor', 'TrueColorProcessor',
-           'VisProcessor', 'AbstractProcessor', 'processor_factory']
+           'VisProcessor', 'processor_factory']

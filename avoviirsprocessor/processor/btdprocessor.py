@@ -1,4 +1,4 @@
-from avoviirsprocessor.processor import AbstractProcessor
+from avoviirsprocessor.processor.abstractprocessor import AbstractProcessor
 
 
 class BTDProcessor(AbstractProcessor):

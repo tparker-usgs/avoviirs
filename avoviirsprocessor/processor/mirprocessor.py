@@ -1,9 +1,9 @@
 from avoviirsprocessor.processor import Processor
 
 
-class Ir108Processor(Processor):
+class MIRProcessor(Processor):
     def isFamiliar(self, topic):
-        if topic.endswith("/ir108"):
+        if topic.endswith("/mir"):
             return True
         else:
             return False

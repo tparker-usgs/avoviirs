@@ -26,7 +26,8 @@ def main():
         socket.send(b"gimme something to do")
         print("waiting for response")
         message = socket.recv()
-        print("Received message {}. \nWhew. Let rest for 10 seconds.".format(message))
+        print("Received message {}.")
+        print("hew. Let rest for 10 seconds.".format(message))
         time.sleep(10)
 
 

@@ -1,7 +1,7 @@
-from avoviirsprocessor.processor import Processor
+from avoviirsprocessor.processor import AbstractProcessor
 
 
-class DNBProcessor(Processor):
+class DNBProcessor(AbstractProcessor):
     def isFamiliar(self, topic):
         if topic.endswith("/dnb"):
             return True

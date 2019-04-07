@@ -1,7 +1,7 @@
-from avoviirsprocessor.processor import Processor
+from avoviirsprocessor.processor import AbstractProcessor
 
 
-class BTDProcessor(Processor):
+class BTDProcessor(AbstractProcessor):
     def isFamiliar(self, topic):
         if topic.endswith("/btd"):
             return True

@@ -48,10 +48,10 @@ AREA_DEF = '/app/trollConfig/areas.def'
 TYPEFACE = "/app/fonts/Cousine-Bold.ttf"
 
 
-class Processor(ABC):
+class AbstractProcessor(ABC):
     def __init__(self, message):
         self.message = message
-        super(Processor, self).__init__()
+        super(AbstractProcessor, self).__init__()
 
     @abstractmethod
     def isFamiliar(self):
@@ -187,7 +187,7 @@ class Processor(ABC):
 def processor_factory(message):
     topic = message.subject
 
-    types = Processor.__subclasses__()
+    types = AbstractProcessor.__subclasses__()
     for type in types:
         if type.isFamiliar(topic):
             return type.__new__(message)

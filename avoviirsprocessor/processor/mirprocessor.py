@@ -1,7 +1,7 @@
-from avoviirsprocessor.processor import Processor
+from avoviirsprocessor.processor import AbstractProcessor
 
 
-class MIRProcessor(Processor):
+class MIRProcessor(AbstractProcessor):
     def isFamiliar(self, topic):
         if topic.endswith("/mir"):
             return True

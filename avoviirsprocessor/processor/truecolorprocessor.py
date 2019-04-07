@@ -1,7 +1,7 @@
-from avoviirsprocessor.processor import Processor
+from avoviirsprocessor.processor import AbstractProcessor
 
 
-class TrueColorProcessor(Processor):
+class TrueColorProcessor(AbstractProcessor):
     def isFamiliar(self, topic):
         if topic.endswith("/truecolor"):
             return True

@@ -16,7 +16,7 @@ import zmq
 import time
 
 from posttroll.message import Message
-from avoviirsprocessor.processor import processor_factory
+import avoviirsprocessor.processor as processor
 from datetime import timedelta
 
 ORBIT_SLACK = timedelta(minutes=30)
@@ -39,9 +39,9 @@ def main():
         print("waiting for response")
         msg_bytes = socket.recv()
         msg = Message.decode(msg_bytes)
-        processor = processor_factory(msg)
+        processor = processor.processor_factory(msg)
         print(processor)
-        print("Received message {}.".format(msg))
+        print("Received message {}.".format(msg.subject))
         print("Whew. Let rest for 10 seconds.")
         time.sleep(10)
 

@@ -1,7 +1,7 @@
-from avoviirsprocessor.processor import Processor
+from avoviirsprocessor.processor import AbstractProcessor
 
 
-class IR108HRProcessor(Processor):
+class IR108HRProcessor(AbstractProcessor):
     def isFamiliar(self, topic):
         if topic.endswith("/ir108hr"):
             return True

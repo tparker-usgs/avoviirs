@@ -191,7 +191,7 @@ def processor_factory(message):
     types = AbstractProcessor.__subclasses__()
     for type in types:
         if type.is_familiar(topic):
-            return type.__new__(message)
+            return type(message)
 
     err_msg = "I don't know how to handle message topic {}".format(topic)
     raise NotImplementedError(err_msg)

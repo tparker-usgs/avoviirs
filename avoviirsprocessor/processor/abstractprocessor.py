@@ -55,7 +55,7 @@ class AbstractProcessor(ABC):
         super(AbstractProcessor, self).__init__()
 
     @abstractmethod
-    def isFamiliar(self, topic):
+    def is_familiar(topic):
         pass
 
     def process_message(self):
@@ -190,7 +190,7 @@ def processor_factory(message):
 
     types = AbstractProcessor.__subclasses__()
     for type in types:
-        if type.isFamiliar(topic):
+        if type.is_familiar(topic):
             return type.__new__(message)
 
     err_msg = "I don't know how to handle message topic {}".format(topic)

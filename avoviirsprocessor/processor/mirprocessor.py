@@ -2,7 +2,7 @@ from avoviirsprocessor.processor.abstractprocessor import AbstractProcessor
 
 
 class MIRProcessor(AbstractProcessor):
-    def isFamiliar(self, topic):
+    def is_familiar(topic):
         if topic.endswith("/mir"):
             return True
         else:

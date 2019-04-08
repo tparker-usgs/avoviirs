@@ -55,7 +55,7 @@ class AbstractProcessor(ABC):
         super(AbstractProcessor, self).__init__()
 
     @abstractmethod
-    def isFamiliar(self):
+    def isFamiliar(self, topic):
         pass
 
     def process_message(self):

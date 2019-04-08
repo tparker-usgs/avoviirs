@@ -16,6 +16,7 @@ Process VIIRS data at AVO
 """
 
 from avoviirsprocessor.processor.btdprocessor import BTDProcessor
+from avoviirsprocessor.processor.dnbprocessor import DNBProcessor
 from avoviirsprocessor.processor.ir108hrprocessor import IR108HRProcessor
 from avoviirsprocessor.processor.ir108processor import IR108Processor
 from avoviirsprocessor.processor.mirprocessor import MIRProcessor
@@ -23,6 +24,6 @@ from avoviirsprocessor.processor.truecolorprocessor import TrueColorProcessor
 from avoviirsprocessor.processor.visprocessor import VisProcessor
 from avoviirsprocessor.processor.abstractprocessor import processor_factory
 
-__all__ = ['BTDProcessor', 'BTDProcessor', 'IR108HRProcessor',
+__all__ = ['BTDProcessor', 'BTDProcessor', 'DNBPRocessor', 'IR108HRProcessor',
            'IR108Processor', 'MIRProcessor', 'TrueColorProcessor',
            'VisProcessor', 'processor_factory']

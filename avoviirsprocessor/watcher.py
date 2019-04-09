@@ -14,10 +14,13 @@
 
 import zmq
 import time
+import signal
 
 from posttroll.message import Message
 import avoviirsprocessor.processor as processor
 from datetime import timedelta
+import tomputils.util as tutil
+
 
 ORBIT_SLACK = timedelta(minutes=30)
 GRANULE_SPAN = timedelta(seconds=85.4)
@@ -29,8 +32,15 @@ TYPEFACE = "/app/fonts/Cousine-Bold.ttf"
 
 
 def main():
+    # let ctrl-c work as it should.
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+    global logger
+    logger = tutil.setup_logging("avoviirsprocessor.watcher errors")
+
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
+    socket.setsockopt(zmq.TCP_KEEPALIVE, 1)
     socket.connect("tcp://viirscollector:19091")
 
     while True:
@@ -40,9 +50,9 @@ def main():
         msg_bytes = socket.recv()
         msg = Message.decode(msg_bytes)
         proc = processor.processor_factory(msg)
-        print(proc)
-        print("Received message {}.".format(msg.subject))
-        print("Whew. Let rest for 10 seconds.")
+        proc.process_message()
+
+        print("Whew, that was hard. Let rest for 10 seconds.")
         time.sleep(10)
 
 

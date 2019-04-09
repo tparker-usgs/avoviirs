@@ -37,8 +37,8 @@ from datetime import timedelta
 # import numpy as np
 # from pycoast import ContourWriterAGG
 # from trollimage.image import Image
-# from pyresample.utils import parse_area_file
-
+from pyresample import parse_area_file
+import tomputils.util as tutil
 
 ORBIT_SLACK = timedelta(minutes=30)
 GRANULE_SPAN = timedelta(seconds=85.4)
@@ -52,6 +52,8 @@ TYPEFACE = "/app/fonts/Cousine-Bold.ttf"
 class AbstractProcessor(ABC):
     def __init__(self, message):
         self.message = message
+        self.logger = tutil.setup_logging("msg_pub errors")
+
         super(AbstractProcessor, self).__init__()
 
     @abstractmethod
@@ -59,10 +61,12 @@ class AbstractProcessor(ABC):
         pass
 
     def process_message(self):
-        msg = self.message
-        # proc_start = datetime.now()
         print("Message: ")
-        print(json.dumps(msg.data, indent=4, sort_keys=True))
+        print(json.dumps(self.message.data, indent=4, sort_keys=True))
+
+        for sector_def in parse_area_file(AREA_DEF):
+            self.logger.debug("Found area {} for topic {}", sector_def.area_id,
+                              self.message.subject)
         # start = dateutil.parser.parse(msg.data["start_time"])
         # end = start + GRANULE_SPAN
         # start_slack = start - ORBIT_SLACK
@@ -165,24 +169,6 @@ class AbstractProcessor(ABC):
         #
         #     print("Saving to %s" % filepath)
         #     pilimg.save(filepath)
-        #
-        # proc_end = datetime.now()
-        # if len(images) < 1:
-        #     msg = "### :hourglass: OMPS pass covers no sectors."
-        # else:
-        #     msg = "### :camera: New OMPS image"
-        #     msg += "\n\n| Sector | Count | Max"
-        #     msg += "\n|:-------|:-----:|:---:|"
-        #     for (sector, so2_count, so2_max) in images:
-        #         msg += '\n| {} | {} | {:f} |'.format(sector, so2_count,
-        #                                              so2_max)
-        # msg += "\n**Granule span** %s" % mm.format_span(start, end)
-        # delta = mm.format_timedelta(proc_end - proc_start)
-        # span = mm.format_span(proc_start, proc_end)
-        # msg += '\n**Processing time** %s (%s)' % (delta, span)
-        # delta = mm.format_timedelta(proc_end - start)
-        # msg += '\n**Accumulated delay** %s' % delta
-        # self.mattermost.post(msg)
 
 
 def processor_factory(message):

@@ -43,7 +43,7 @@ ORBIT_SLACK = timedelta(minutes=30)
 GRANULE_SPAN = timedelta(seconds=85.4)
 GOLDENROD = (218, 165, 32)
 PNG_DIR = '/viirs/png'
-AREA_DEF = '/app/avoviirsprocessor/trollConfig/areas.def'
+AREA_DEF = '/app/avoviirsprocessor/trollconfig/areas.def'
 TYPEFACE = "/app/avoviirsprocessor/Cousine-Bold.ttf"
 
 

@@ -10,4 +10,5 @@ COPY setup.cfg .
 COPY avoviirsprocessor avoviirsprocessor
 RUN python setup.py install
 
+RUN pip freeze > requirements.txt
 CMD ["watcher"]

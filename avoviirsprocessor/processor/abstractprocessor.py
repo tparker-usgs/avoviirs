@@ -15,10 +15,16 @@
 from abc import ABC,  abstractmethod
 from datetime import timedelta
 
-# from datetime import timedelta, datetime
+import dateutil
+import tomputils.util as tutil
+from pyresample.utils import parse_area_file
+# from trollsched.satpass import Pass
+
+# import json
 # from posttroll.subscriber import Subscribe
 # from posttroll.message import datetime_encoder
 # from pprint import pprint
+# from datetime import timedelta, datetime
 # from dateutil import parser
 # from pyorbital.orbital import Orbital
 # from mpop.utils import debug_on
@@ -36,8 +42,7 @@ from datetime import timedelta
 # import numpy as np
 # from pycoast import ContourWriterAGG
 # from trollimage.image import Image
-from pyresample import parse_area_file
-import tomputils.util as tutil
+# from pyresample.utils import parse_area_file
 
 ORBIT_SLACK = timedelta(minutes=30)
 GRANULE_SPAN = timedelta(seconds=85.4)
@@ -49,7 +54,7 @@ TYPEFACE = "/app/avoviirsprocessor/Cousine-Bold.ttf"
 
 class AbstractProcessor(ABC):
     def __init__(self, message):
-        self.message = message
+        self.msg = message
         self.logger = tutil.setup_logging("msg_pub errors")
 
         super(AbstractProcessor, self).__init__()
@@ -59,18 +64,18 @@ class AbstractProcessor(ABC):
         pass
 
     def process_message(self):
-        self.logger.debug("Processing message: %s", self.message.encode())
+        self.logger.debug("Processing message: %s", self.msg.encode())
 
         for sector_def in parse_area_file(AREA_DEF):
             self.logger.debug("Found area %s for topic %s", sector_def.area_id,
-                              self.message.subject)
-        # start = dateutil.parser.parse(msg.data["start_time"])
-        # end = start + GRANULE_SPAN
-        # start_slack = start - ORBIT_SLACK
-        # print("start %s :: %s" % (start_slack, type(start_slack)))
-        # print("end %s :: %s" % (end, type(end)))
-        # reader = "satpy/etc/readers/omps_edr.yaml"
-        # base_dir = "/data/omps/edr"
+                              self.msg.subject)
+
+        start = dateutil.parser.parse(self.msg.data["start_time"])
+        end = start + GRANULE_SPAN
+        start_slack = start - ORBIT_SLACK
+        self.logger.debug("start %s :: %s", start_slack, type(start_slack))
+        self.logger.debug("end %s :: %s", end, type(end))
+        # base_dir = "/viirs/sdr"
         # overpass = Pass("SUOMI NPP", start_slack, end, instrument='omps')
         #
         # images = []

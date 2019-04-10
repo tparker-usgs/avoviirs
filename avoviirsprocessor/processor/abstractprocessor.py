@@ -17,7 +17,8 @@ from datetime import timedelta
 
 import tomputils.util as tutil
 from pyresample.utils import parse_area_file
-# from trollsched.satpass import Pass
+from trollsched.satpass import Pass
+from satpy.scene import Scene
 
 # import json
 # from posttroll.subscriber import Subscribe
@@ -26,7 +27,6 @@ from pyresample.utils import parse_area_file
 # from datetime import timedelta, datetime
 # from pyorbital.orbital import Orbital
 # from mpop.utils import debug_on
-# from trollsched.satpass import Pass
 # from mpop.projector import get_area_def
 # from pydecorate import DecoratorAGG
 # import aggdraw
@@ -35,7 +35,6 @@ from pyresample.utils import parse_area_file
 # import tomputils.mattermost as mm
 # import sys
 # import traceback
-# from satpy.scene import Scene
 # from trollimage.colormap import rainbow
 # import numpy as np
 # from pycoast import ContourWriterAGG
@@ -64,36 +63,32 @@ class AbstractProcessor(ABC):
     def process_message(self):
         self.logger.debug("Processing message: %s", self.msg.encode())
 
-        for sector_def in parse_area_file(AREA_DEF):
-            self.logger.debug("Found area %s for topic %s", sector_def.area_id,
-                              self.msg.subject)
-
-        # start = parser.parse(self.msg.data["start_time"])
         start = self.msg.data["start_time"]
+        base_dir = "/viirs/sdr"
 
         self.logger.debug("TOMP T %s", str(type(self.msg.data["start_time"])))
         end = start + GRANULE_SPAN
         start_slack = start - ORBIT_SLACK
-        self.logger.debug("start %s :: %s", start_slack, type(start_slack))
-        self.logger.debug("end %s :: %s", end, type(end))
-        # base_dir = "/viirs/sdr"
-        # overpass = Pass("SUOMI NPP", start_slack, end, instrument='omps')
-        #
-        # images = []
+        overpass = Pass("SUOMI NPP", start_slack, end, instrument='omps')
+
         # colorbar_text_color = GOLDENROD
         # img_colormap = None
-        # dev = False
-        # for sector_def in parse_area_file(AREA_DEF):
-        #     coverage = overpass.area_coverage(sector_def)
-        #     print("%s coverage: %f" % (sector_def.area_id, coverage))
-        #
-        #     if coverage < .1:
-        #         continue
-        #
-        #     global_scene = Scene(platform_name="SUOMI NPP", sensor="omps",
-        #                          start_time=start, end_time=end,
-        #                          base_dir=base_dir,
-        #                          reader=reader)
+        # images = []
+
+        for sector_def in parse_area_file(AREA_DEF):
+            self.logger.debug("Found area %s for topic %s", sector_def.area_id,
+                              self.msg.subject)
+            coverage = overpass.area_coverage(sector_def)
+            print("%s coverage: %f" % (sector_def.area_id, coverage))
+
+            if coverage < .1:
+                continue
+
+            global_scene = Scene(platform_name=self.msg.data['platform_name'],
+                                 start_time=start, end_time=end,
+                                 base_dir=base_dir,
+                                 reader='viirs_sdr')
+            print("TOMP SAYS {}".format(global_scene))
         #     global_scene.load(['so2_trm'])
         #     local = global_scene.resample(sector_def,
         #                                   radius_of_influence=100000)

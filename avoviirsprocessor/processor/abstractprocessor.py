@@ -42,10 +42,9 @@ import tomputils.util as tutil
 ORBIT_SLACK = timedelta(minutes=30)
 GRANULE_SPAN = timedelta(seconds=85.4)
 GOLDENROD = (218, 165, 32)
-PNG_DIR = '/data/omps/png'
-PNG_DEV_DIR = '/data/omps/png-dev'
-AREA_DEF = '/app/trollConfig/areas.def'
-TYPEFACE = "/app/fonts/Cousine-Bold.ttf"
+PNG_DIR = '/viirs/png'
+AREA_DEF = '/app/avoviirsprocessor/trollConfig/areas.def'
+TYPEFACE = "/app/avoviirsprocessor/Cousine-Bold.ttf"
 
 
 class AbstractProcessor(ABC):

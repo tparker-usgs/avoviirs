@@ -16,7 +16,7 @@ from abc import ABC,  abstractmethod
 from datetime import timedelta
 
 import tomputils.util as tutil
-from pyresample.utils import parse_area_file
+from pyresample import parse_area_file
 from trollsched.satpass import Pass
 from satpy.scene import Scene
 

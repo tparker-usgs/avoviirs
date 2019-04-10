@@ -61,8 +61,7 @@ class AbstractProcessor(ABC):
         pass
 
     def process_message(self):
-        print("Message: ")
-        print(json.dumps(self.message.data, indent=4, sort_keys=True))
+        self.logger.debug("Processing message: %s", self.message.encode())
 
         for sector_def in parse_area_file(AREA_DEF):
             self.logger.debug("Found area {} for topic {}", sector_def.area_id,

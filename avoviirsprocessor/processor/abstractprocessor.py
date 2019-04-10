@@ -84,10 +84,8 @@ class AbstractProcessor(ABC):
 
             if coverage < .1:
                 continue
-
-            global_scene = Scene(platform_name=self.msg.data['platform_name'],
-                                 start_time=start, end_time=end,
-                                 base_dir=base_dir,
+            filenames = [file['uri'] for file in self.msg.data['dataset']]
+            global_scene = Scene(filenames=filenames,
                                  reader='viirs_sdr')
             print("TOMP SAYS {}".format(global_scene))
         #     global_scene.load(['so2_trm'])

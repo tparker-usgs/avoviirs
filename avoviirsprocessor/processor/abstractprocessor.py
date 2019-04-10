@@ -62,7 +62,7 @@ class AbstractProcessor(ABC):
         self.logger.debug("Processing message: %s", self.message.encode())
 
         for sector_def in parse_area_file(AREA_DEF):
-            self.logger.debug("Found area {} for topic {}", sector_def.area_id,
+            self.logger.debug("Found area %s for topic %s", sector_def.area_id,
                               self.message.subject)
         # start = dateutil.parser.parse(msg.data["start_time"])
         # end = start + GRANULE_SPAN

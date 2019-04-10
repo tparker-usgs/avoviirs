@@ -15,7 +15,7 @@
 from abc import ABC,  abstractmethod
 from datetime import timedelta
 
-import dateutil
+from dateutil import parser
 import tomputils.util as tutil
 from pyresample.utils import parse_area_file
 # from trollsched.satpass import Pass
@@ -25,7 +25,6 @@ from pyresample.utils import parse_area_file
 # from posttroll.message import datetime_encoder
 # from pprint import pprint
 # from datetime import timedelta, datetime
-# from dateutil import parser
 # from pyorbital.orbital import Orbital
 # from mpop.utils import debug_on
 # from trollsched.satpass import Pass
@@ -70,7 +69,7 @@ class AbstractProcessor(ABC):
             self.logger.debug("Found area %s for topic %s", sector_def.area_id,
                               self.msg.subject)
 
-        start = dateutil.parser.parse(self.msg.data["start_time"])
+        start = parser.parse(self.msg.data["start_time"])
         end = start + GRANULE_SPAN
         start_slack = start - ORBIT_SLACK
         self.logger.debug("start %s :: %s", start_slack, type(start_slack))

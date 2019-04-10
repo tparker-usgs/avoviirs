@@ -15,7 +15,6 @@
 from abc import ABC,  abstractmethod
 from datetime import timedelta
 
-from dateutil import parser
 import tomputils.util as tutil
 from pyresample.utils import parse_area_file
 # from trollsched.satpass import Pass
@@ -69,7 +68,10 @@ class AbstractProcessor(ABC):
             self.logger.debug("Found area %s for topic %s", sector_def.area_id,
                               self.msg.subject)
 
-        start = parser.parse(self.msg.data["start_time"])
+        # start = parser.parse(self.msg.data["start_time"])
+        start = self.msg.data["start_time"]
+
+        self.logger.debug("TOMP T %s", str(type(self.msg.data["start_time"])))
         end = start + GRANULE_SPAN
         start_slack = start - ORBIT_SLACK
         self.logger.debug("start %s :: %s", start_slack, type(start_slack))

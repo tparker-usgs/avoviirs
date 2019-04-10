@@ -69,7 +69,8 @@ class AbstractProcessor(ABC):
         self.logger.debug("TOMP T %s", str(type(self.msg.data["start_time"])))
         end = start + GRANULE_SPAN
         start_slack = start - ORBIT_SLACK
-        overpass = Pass(self.msg.data['platform_name'], start_slack, end)
+        overpass = Pass(self.msg.data['platform_name'], start_slack, end,
+                        instrument='viirs')
 
         # colorbar_text_color = GOLDENROD
         # img_colormap = None

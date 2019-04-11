@@ -65,7 +65,11 @@ class AbstractProcessor(ABC):
         data = self.msg.data
         scn = Scene(start_time=data['start_time'], end_time=['end_time'],
                     reader='viirs_sdr')
-        scn.load(['M15'])
+        try:
+            scn.load(['M15'])
+        except ValueError:
+            self.logger.debug("No M15 data, skipping")
+            return
 
         overpass = Pass(self.msg.d, scn.start_time, scn.end_time,
                         instrument='viirs')

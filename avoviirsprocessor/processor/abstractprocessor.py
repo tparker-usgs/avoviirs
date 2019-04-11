@@ -67,7 +67,7 @@ class AbstractProcessor(ABC):
                 continue
 
             local = scn.resample(sector_def)
-            filename = "/virrs/sdr/M15-{}.png".format(sector_def.area_id)
+            filename = "{}/M15-{}.png".format(PNG_DIR, sector_def.area_id)
             print("writing {}".format(filename))
             local.save_dataset('M15', filename=filename)
 

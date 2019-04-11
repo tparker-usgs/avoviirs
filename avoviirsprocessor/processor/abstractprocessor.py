@@ -21,26 +21,6 @@ from trollsched.satpass import Pass
 from satpy.scene import Scene
 from satpy import find_files_and_readers
 
-# import json
-# from posttroll.subscriber import Subscribe
-# from posttroll.message import datetime_encoder
-# from pprint import pprint
-# from datetime import timedelta, datetime
-# from pyorbital.orbital import Orbital
-# from mpop.utils import debug_on
-# from mpop.projector import get_area_def
-# from pydecorate import DecoratorAGG
-# import aggdraw
-# import os
-# import os.path
-# import tomputils.mattermost as mm
-# import sys
-# import traceback
-# from trollimage.colormap import rainbow
-# import numpy as np
-# from pycoast import ContourWriterAGG
-# from trollimage.image import Image
-# from pyresample.utils import parse_area_file
 
 ORBIT_SLACK = timedelta(minutes=30)
 GRANULE_SPAN = timedelta(seconds=85.4)
@@ -49,6 +29,7 @@ PNG_DIR = '/viirs/png'
 AREA_DEF = '/app/avoviirsprocessor/trollconfig/areas.def'
 TYPEFACE = "/app/avoviirsprocessor/Cousine-Bold.ttf"
 PPP_CONFIG_DIR = '/app/avoviirsprocessor/trollconfig'
+
 
 class AbstractProcessor(ABC):
     def __init__(self, message):
@@ -64,9 +45,11 @@ class AbstractProcessor(ABC):
     def process_message(self):
         self.logger.debug("Processing message: %s", self.msg.encode())
         data = self.msg.data
-        filenames = find_files_and_readers(base_dir='/viirs/sdr', reader='viirs_sdr',
+        filter_parameters = {'orbit': data['orbit']}
+        filenames = find_files_and_readers(base_dir='/viirs/sdr',
+                                           reader='viirs_sdr',
                                            ppp_config_dir=PPP_CONFIG_DIR,
-                                           filter_parameters={'orbit': data['orbit']})
+                                           filter_parameters=filter_parameters)
         scn = Scene(filenames=filenames, reader='viirs_sdr')
         try:
             scn.load(['M15'])

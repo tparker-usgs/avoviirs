@@ -45,7 +45,7 @@ class AbstractProcessor(ABC):
     def process_message(self):
         self.logger.debug("Processing message: %s", self.msg.encode())
         data = self.msg.data
-        filter_parameters = {'orbit': data['orbit']}
+        filter_parameters = {'orbit': data['orbit_number']}
         filenames = find_files_and_readers(base_dir='/viirs/sdr',
                                            reader='viirs_sdr',
                                            ppp_config_dir=PPP_CONFIG_DIR,

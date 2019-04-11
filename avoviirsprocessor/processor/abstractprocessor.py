@@ -62,110 +62,24 @@ class AbstractProcessor(ABC):
 
     def process_message(self):
         self.logger.debug("Processing message: %s", self.msg.encode())
+        data = self.msg.data
+        scn = Scene(start_time=data['start_time'], end_time=['end_time'],
+                    reader='viirs_sdr')
+        scn.load(['M15'])
 
-        start = self.msg.data["start_time"]
-        base_dir = "/viirs/sdr"
-
-        self.logger.debug("TOMP T %s", str(type(self.msg.data["start_time"])))
-        end = start + GRANULE_SPAN
-        start_slack = start - ORBIT_SLACK
-        overpass = Pass(self.msg.data['platform_name'], start_slack, end,
+        overpass = Pass(self.msg.d, scn.start_time, scn.end_time,
                         instrument='viirs')
-
-        # colorbar_text_color = GOLDENROD
-        # img_colormap = None
-        # images = []
-
         for sector_def in parse_area_file(AREA_DEF):
-            self.logger.debug("Found area %s for topic %s", sector_def.area_id,
-                              self.msg.subject)
             coverage = overpass.area_coverage(sector_def)
-            print("%s coverage: %f" % (sector_def.area_id, coverage))
-
+            self.logger.debug("{} coverage: {}".format(sector_def.area_id,
+                                                       coverage))
             if coverage < .1:
                 continue
-            filenames = [file['uri'] for file in self.msg.data['dataset']]
-            global_scene = Scene(filenames=filenames,
-                                 reader='viirs_sdr')
-            print("TOMP SAYS {}".format(global_scene))
-        #     global_scene.load(['so2_trm'])
-        #     local = global_scene.resample(sector_def,
-        #                                   radius_of_influence=100000)
-        #     ma = np.ma.masked_outside(local.datasets['so2_trm'], 0.5, 2)
-        #     mask = ma.mask
-        #     if mask.all():
-        #         continue
-        #     local.datasets['so2_trm'] = np.ma.masked_where(mask,
-        #                                                    local.datasets[
-        #                                                        'so2_trm'])
-        #     so2_max = np.nanmax(local.datasets['so2_trm'])
-        #     so2_min = np.nanmin(local.datasets['so2_trm'])
-        #     so2_count = local.datasets['so2_trm'].count()
-        #
-        #     if so2_max < 1:
-        #         continue
-        #
-        #     images.append((sector_def.area_id, so2_count, so2_max))
-        #
-        #     # plot
-        #     img = Image(local['so2_trm'], mode='L')
-        #     img.fill_value = (1, 1, 1)
-        #     img.colorize(rainbow)
-        #
-        #     # add coast
-        #     cw_ = ContourWriterAGG()
-        #     pilimg = img.pil_image()
-        #     cw_.add_coastlines(pilimg, sector_def, resolution='f',
-        #                        outline="black", width=0.5)
-        #
-        #     label = "%s Suomi-NPP OMPS SO2"
-        #     tick_marks = 10
-        #     minor_tick_marks = 5
-        #
-        #     dc = DecoratorAGG(pilimg)
-        #     dc.align_bottom()
-        #
-        #     font = aggdraw.Font(colorbar_text_color, TYPEFACE, size=14)
-        #     if img_colormap is not None:
-        #         dc.add_scale(img_colormap, extend=True,
-        #                      tick_marks=tick_marks,
-        #                      minor_tick_marks=minor_tick_marks, font=font,
-        #                      height=20, margins=[1, 1], )
-        #         dc.new_line()
-        #
-        #     lat = float(sector_def.proj_dict['lat_0'])
-        #     lon = float(sector_def.proj_dict['lon_0'])
-        #     passes = Orbital("Suomi NPP").get_next_passes(start_slack, 1,
-        #                                                   lon, lat, 0)
-        #     if passes is not None:
-        #         file_start = passes[0][0]
-        #     else:
-        #         file_start = start
-        #     start_string = file_start.strftime('%m/%d/%Y %H:%M UTC')
-        #     font = aggdraw.Font(GOLDENROD, TYPEFACE, size=14)
-        #     dc.add_text(label % start_string, font=font, height=30,
-        #                 extend=True, bg_opacity=128, bg='black')
-        #
-        #     if dev:
-        #         filepath = os.path.join(PNG_DEV_DIR, sector_def.area_id)
-        #     else:
-        #         filepath = os.path.join(PNG_DIR, sector_def.area_id)
-        #
-        #     if not os.path.exists(filepath):
-        #         print("Making out dir " + filepath)
-        #         os.makedirs(filepath)
-        #
-        #     # filename = "%s-%s-%s.png" % (size_sector,
-        #     #                             self.product,
-        #     #                             file_start.strftime('%Y%m%d-%H%M'))
-        #
-        #     filename = "%s.omps.--.--.%s.so2.png" % (
-        #         file_start.strftime('%Y%m%d.%H%M'), sector_def.area_id)
-        #
-        #     filepath = os.path.join(filepath, filename)
-        #
-        #     print("Saving to %s" % filepath)
-        #     pilimg.save(filepath)
+
+            local = scn.resample(sector_def)
+            filename = "/virrs/sdr/M15-{}.png".format(sector_def.area_id)
+            print("writing {}".format(filename))
+            local.save_dataset('M15', filename=filename)
 
 
 def processor_factory(message):

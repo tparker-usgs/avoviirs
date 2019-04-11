@@ -47,7 +47,7 @@ GOLDENROD = (218, 165, 32)
 PNG_DIR = '/viirs/png'
 AREA_DEF = '/app/avoviirsprocessor/trollconfig/areas.def'
 TYPEFACE = "/app/avoviirsprocessor/Cousine-Bold.ttf"
-
+PPP_CONFIG_DIR = '/app/avoviirsprocessor/trollconfig'
 
 class AbstractProcessor(ABC):
     def __init__(self, message):
@@ -63,15 +63,17 @@ class AbstractProcessor(ABC):
     def process_message(self):
         self.logger.debug("Processing message: %s", self.msg.encode())
         data = self.msg.data
-        scn = Scene(start_time=data['start_time'], end_time=['end_time'],
-                    reader='viirs_sdr')
+        filenames = find_files_and_readers(base_dir='/viirs/sdr', reader='viirs_sdr',
+                                           ppp_config_dir=PPP_CONFIG_DIR,
+                                           filter_parameters={'orbit': data['orbit']})
+        scn = Scene(filenames=filenames, reader='viirs_sdr')
         try:
             scn.load(['M15'])
         except ValueError:
             self.logger.debug("No M15 data, skipping")
             return
 
-        overpass = Pass(self.msg.d, scn.start_time, scn.end_time,
+        overpass = Pass(data['platform_name'], scn.start_time, scn.end_time,
                         instrument='viirs')
         for sector_def in parse_area_file(AREA_DEF):
             coverage = overpass.area_coverage(sector_def)

@@ -19,6 +19,7 @@ import tomputils.util as tutil
 from pyresample import parse_area_file
 from trollsched.satpass import Pass
 from satpy.scene import Scene
+from satpy import find_files_and_readers
 
 # import json
 # from posttroll.subscriber import Subscribe

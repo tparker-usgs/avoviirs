@@ -101,7 +101,7 @@ class AbstractProcessor(ABC):
             writer, save_kwargs = load_writer('simple_image')
             print("TOMP SAYS: {}".format(save_kwargs))
             writer.save_dataset(local['M15'], overlay=overlay,
-                                decorate=decorate)
+                                decorate=decorate, filename=filename)
 
 def processor_factory(message):
     topic = message.subject

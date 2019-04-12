@@ -81,7 +81,7 @@ class AbstractProcessor(ABC):
                                      {'text': {'txt': start_time_txt,
                                                'align': {'top_bottom': 'bottom',
                                                          'left_right': 'right'},
-                                               'font': <path to ttf font>,
+                                               'font': TYPEFACE,
                                                'font_size': 22,
                                                'height': 30,
                                                'bg': 'black',

@@ -20,6 +20,7 @@ from pyresample import parse_area_file
 from trollsched.satpass import Pass
 from satpy.scene import Scene
 from satpy import find_files_and_readers
+from satpy.utils import debug_on
 
 ORBIT_SLACK = timedelta(minutes=30)
 GRANULE_SPAN = timedelta(seconds=85.4)
@@ -34,6 +35,7 @@ class AbstractProcessor(ABC):
     def __init__(self, message):
         self.msg = message
         self.logger = tutil.setup_logging("msg_pub errors")
+        debug_on()
 
         super(AbstractProcessor, self).__init__()
 

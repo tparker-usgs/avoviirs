@@ -78,15 +78,18 @@ class AbstractProcessor(ABC):
                        'level_coast': 1,
                        'level_borders': 2}
 
+            start_string = data['start_time'].strftime('%m/%d/%Y %H:%M UTC')
+            label = "{} {} VIIRS thermal infrared brightness temperature(C)".format(start_string, data['platform_name'])
+
             decorate = {'decorate': [
                                      {'text': {'txt': "Tom's Sample test",
                                                'align': {'top_bottom': 'bottom',
                                                          'left_right': 'right'},
                                                'font': TYPEFACE,
-                                               'font_size': 22,
+                                               'font_size': 14,
                                                'height': 30,
                                                'bg': 'black',
-                                               'bg_opacity': 255,
+                                               'bg_opacity': 128,
                                                'line': 'white'}}]}
 
             #local.save_dataset('M15', filename=filename, writer='simple_image',

@@ -78,6 +78,19 @@ class AbstractProcessor(ABC):
             local.save_dataset('M15', filename=filename, writer='simple_image',
                                overlay=overlay)
 
+# crs = new_scn['I04'].attrs['area'].to_cartopy_crs()
+# ax = plt.axes(projection=crs)
+#
+# ax.coastlines()
+# ax.gridlines()
+# ax.set_global()
+# plt.imshow(new_scn['I04'], transform=crs, extent=crs.bounds, origin='upper')
+# cbar = plt.colorbar()
+# cbar.set_label("Kelvin")
+# plt.show()
+#         img = get_enhanced_image(dataset.squeeze(), enhance=self.enhancer, overlay=overlay,
+#                                decorate=decorate, fill_value=fill_value)
+# img.pil_image()
 
 def processor_factory(message):
     topic = message.subject

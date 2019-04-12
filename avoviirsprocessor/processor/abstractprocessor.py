@@ -72,6 +72,7 @@ class AbstractProcessor(ABC):
             filename = "{}/M15-{}.png".format(PNG_DIR, sector_def.area_id)
             print("writing {}".format(filename))
             overlay = {'coast_dir': '/usr/local/gshhg',
+                       'area': sector_def,
                        'color': GOLDENROD,
                        'width': 3,
                        'level_coast': 1,
@@ -91,7 +92,7 @@ class AbstractProcessor(ABC):
             #local.save_dataset('M15', filename=filename, writer='simple_image',
                                #overlay=overlay)
 
-            img = get_enhanced_image(scn['M15'], overlay=overlay,
+            img = get_enhanced_image(local['M15'], overlay=overlay,
                                      decorate=decorate)
             writer, save_kwargs = load_writer('simple_image')
             writer.save_dataset('M15', overlay=overlay, compute=compute)

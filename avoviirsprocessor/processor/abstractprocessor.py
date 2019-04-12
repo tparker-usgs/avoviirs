@@ -21,7 +21,6 @@ from trollsched.satpass import Pass
 from satpy.scene import Scene
 from satpy import find_files_and_readers
 
-
 ORBIT_SLACK = timedelta(minutes=30)
 GRANULE_SPAN = timedelta(seconds=85.4)
 GOLDENROD = (218, 165, 32)
@@ -69,7 +68,13 @@ class AbstractProcessor(ABC):
             local = scn.resample(sector_def)
             filename = "{}/M15-{}.png".format(PNG_DIR, sector_def.area_id)
             print("writing {}".format(filename))
-            local.save_dataset('M15', filename=filename)
+            overlay = {'coast_dir': '/usr/local/gshhg',
+                       'color': GOLDENROD,
+                       'width': 3,
+                       'level_coast': 1,
+                       'level_borders': 2}
+            local.save_dataset('M15', filename=filename, writer='simple_image',
+                               overlay=overlay)
 
 
 def processor_factory(message):

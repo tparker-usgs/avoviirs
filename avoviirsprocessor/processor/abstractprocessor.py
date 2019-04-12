@@ -21,6 +21,7 @@ from trollsched.satpass import Pass
 from satpy.scene import Scene
 from satpy import find_files_and_readers
 from satpy.utils import debug_on
+from satpy.writers import get_enhanced_image
 
 ORBIT_SLACK = timedelta(minutes=30)
 GRANULE_SPAN = timedelta(seconds=85.4)
@@ -75,9 +76,25 @@ class AbstractProcessor(ABC):
                        'width': 3,
                        'level_coast': 1,
                        'level_borders': 2}
-            local.save_dataset('M15', filename=filename, writer='simple_image',
-                               overlay=overlay)
 
+            decorate = {'decorate': [
+                                     {'text': {'txt': start_time_txt,
+                                               'align': {'top_bottom': 'bottom',
+                                                         'left_right': 'right'},
+                                               'font': <path to ttf font>,
+                                               'font_size': 22,
+                                               'height': 30,
+                                               'bg': 'black',
+                                               'bg_opacity': 255,
+                                               'line': 'white'}}]}
+
+            #local.save_dataset('M15', filename=filename, writer='simple_image',
+                               #overlay=overlay)
+
+            img = get_enhanced_image(scn['M15'], overlay=overlay,
+                                     decorate=decorate)
+            writer, save_kwargs = load_writer('simple_image')
+            writer.save_dataset('M15', overlay=overlay, compute=compute)
 # crs = new_scn['I04'].attrs['area'].to_cartopy_crs()
 # ax = plt.axes(projection=crs)
 #

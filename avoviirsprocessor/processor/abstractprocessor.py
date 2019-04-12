@@ -72,7 +72,6 @@ class AbstractProcessor(ABC):
             filename = "{}/M15-{}.png".format(PNG_DIR, sector_def.area_id)
             print("writing {}".format(filename))
             overlay = {'coast_dir': '/usr/local/gshhg',
-                       'area': sector_def,
                        'color': GOLDENROD,
                        'width': 3,
                        'level_coast': 1,

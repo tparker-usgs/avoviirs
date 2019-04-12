@@ -21,7 +21,7 @@ from trollsched.satpass import Pass
 from satpy.scene import Scene
 from satpy import find_files_and_readers
 from satpy.utils import debug_on
-from satpy.writers import get_enhanced_image
+from satpy.writers import get_enhanced_image, load_writer
 
 ORBIT_SLACK = timedelta(minutes=30)
 GRANULE_SPAN = timedelta(seconds=85.4)
@@ -78,39 +78,28 @@ class AbstractProcessor(ABC):
                        'level_borders': 2}
 
             start_string = data['start_time'].strftime('%m/%d/%Y %H:%M UTC')
-            label = "{} {} VIIRS thermal infrared brightness temperature(C)".format(start_string, data['platform_name'])
+            label = "{} {} VIIRS thermal infrared brightness temperature(C)"
+            label = label.format(start_string, data['platform_name'])
 
-            decorate = {'decorate': [
-                                     {'text': {'txt': "Tom's Sample test",
-                                               'align': {'top_bottom': 'bottom',
-                                                         'left_right': 'right'},
-                                               'font': TYPEFACE,
-                                               'font_size': 14,
-                                               'height': 30,
-                                               'bg': 'black',
-                                               'bg_opacity': 128,
-                                               'line': 'white'}}]}
+            text = {'text': {'txt': label,
+                             'align': {'top_bottom': 'bottom',
+                                       'left_right': 'right'},
+                             'font': TYPEFACE,
+                             'font_size': 14,
+                             'height': 30,
+                             'bg': 'black',
+                             'bg_opacity': 128,
+                             'line': 'white'}}
+            decorate = {'decorate': [text]}
 
-            #local.save_dataset('M15', filename=filename, writer='simple_image',
-                               #overlay=overlay)
+            # local.save_dataset('M15', filename=filename,
+            #                    writer='simple_image',
+            #                    overlay=overlay)
 
             img = get_enhanced_image(local['M15'], overlay=overlay,
                                      decorate=decorate)
             writer, save_kwargs = load_writer('simple_image')
-            writer.save_dataset('M15', overlay=overlay, compute=compute)
-# crs = new_scn['I04'].attrs['area'].to_cartopy_crs()
-# ax = plt.axes(projection=crs)
-#
-# ax.coastlines()
-# ax.gridlines()
-# ax.set_global()
-# plt.imshow(new_scn['I04'], transform=crs, extent=crs.bounds, origin='upper')
-# cbar = plt.colorbar()
-# cbar.set_label("Kelvin")
-# plt.show()
-#         img = get_enhanced_image(dataset.squeeze(), enhance=self.enhancer, overlay=overlay,
-#                                decorate=decorate, fill_value=fill_value)
-# img.pil_image()
+            writer.save_dataset('M15')
 
 def processor_factory(message):
     topic = message.subject

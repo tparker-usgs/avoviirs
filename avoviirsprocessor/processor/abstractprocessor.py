@@ -73,7 +73,7 @@ class AbstractProcessor(ABC):
             print("writing {}".format(filename))
             overlay = {'coast_dir': '/usr/local/gshhg',
                        'color': GOLDENROD,
-                       'width': 3,
+                       'width': 1,
                        'level_coast': 1,
                        'level_borders': 2}
 
@@ -89,7 +89,7 @@ class AbstractProcessor(ABC):
                              'height': 30,
                              'bg': 'black',
                              'bg_opacity': 128,
-                             'line': 'white'}}
+                             'line': GOLDENROD}}
             decorate = {'decorate': [text]}
 
             # local.save_dataset('M15', filename=filename,

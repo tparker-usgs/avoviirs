@@ -78,7 +78,7 @@ class AbstractProcessor(ABC):
                        'level_borders': 2}
 
             decorate = {'decorate': [
-                                     {'text': {'txt': start_time_txt,
+                                     {'text': {'txt': "Tom's Sample test",
                                                'align': {'top_bottom': 'bottom',
                                                          'left_right': 'right'},
                                                'font': TYPEFACE,

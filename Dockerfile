@@ -13,6 +13,7 @@ RUN python setup.py install
 RUN pip freeze > requirements.txt
 
 ENV PPP_CONFIG_DIR=/app/avoviirsprocessor/trollconfig \
-    GSHHS_DATA_ROOT=/app/gshhg
+    GSHHS_DATA_ROOT=/app/gshhg \
+    PSP_CONFIG_FILE=/app/avoviirsprocessor/trollconfig/pyspectral.yaml
 
 CMD ["watcher"]

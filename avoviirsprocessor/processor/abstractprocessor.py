@@ -54,7 +54,7 @@ class AbstractProcessor(ABC):
                                            filter_parameters=filter_parameters)
         scn = Scene(filenames=filenames, reader='viirs_sdr')
         try:
-            scn.load(['M15'])
+            scn.load(['ir108'])
         except ValueError:
             self.logger.debug("No M15 data, skipping")
             return
@@ -69,7 +69,7 @@ class AbstractProcessor(ABC):
                 continue
 
             local = scn.resample(sector_def)
-            filename = "{}/M15-{}.png".format(PNG_DIR, sector_def.area_id)
+            filename = "{}/ir108-{}.png".format(PNG_DIR, sector_def.area_id)
             print("writing {}".format(filename))
             overlay = {'coast_dir': '/usr/local/gshhg',
                        'color': GOLDENROD,
@@ -93,7 +93,7 @@ class AbstractProcessor(ABC):
             decorate = {'decorate': [text]}
 
             writer, save_kwargs = load_writer('simple_image')
-            writer.save_dataset(local['M15'], overlay=overlay,
+            writer.save_dataset(local['ir108'], overlay=overlay,
                                 decorate=decorate, filename=filename)
 
 

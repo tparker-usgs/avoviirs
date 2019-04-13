@@ -1,0 +1,11 @@
+enhancements:
+  ir108:
+    standard_name: ir108
+    operations:
+    - name: linear_stretch
+      method: !!python/name:satpy.enhancements.stretch
+      kwargs: {stretch: 'linear', min_stretch: 0.0, max_stretch: 100.}
+    - name: inverse
+      method: !!python/name:satpy.enhancements.invert
+      args:
+      - [true, true, true]

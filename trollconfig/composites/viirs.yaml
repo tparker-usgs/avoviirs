@@ -1,0 +1,6 @@
+composites:
+  ir108:
+    standard_name: ir108
+    compositor: !!python/name:satpy.composites.GenericCompositor
+    prerequisites:
+    - name: M15

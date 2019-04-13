@@ -21,6 +21,8 @@ import avoviirsprocessor.processor as processor
 from datetime import timedelta
 import tomputils.util as tutil
 
+REQUEST_TIMEOUT = 10000
+SERVER_ENDPOINT = "tcp://viirscollector:19091"
 
 ORBIT_SLACK = timedelta(minutes=30)
 GRANULE_SPAN = timedelta(seconds=85.4)
@@ -40,20 +42,37 @@ def main():
 
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
-    socket.setsockopt(zmq.TCP_KEEPALIVE, 1)
-    socket.connect("tcp://viirscollector:19091")
+    socket.connect(SERVER_ENDPOINT)
+
+    poll = zmq.Poller()
+    poll.register(socket, zmq.POLLIN)
 
     while True:
-        print("sending request")
+        logger.debug("sending request")
         socket.send(b"gimme something to do")
-        print("waiting for response")
-        msg_bytes = socket.recv()
-        msg = Message.decode(msg_bytes)
-        proc = processor.processor_factory(msg)
-        proc.process_message()
+        logger.debug("waiting for response")
+        socks = dict(poll.poll(REQUEST_TIMEOUT))
+        if socks.get(socket) == zmq.POLLIN:
+            try:
+                logger.debug("getting message")
+                msg_bytes = socket.recv(zmq.NOBLOCK)
+                msg = Message.decode(msg_bytes)
+                proc = processor.processor_factory(msg)
+                proc.process_message()
+                logger.debug("Whew, that was hard. Let rest for 10 seconds.")
+                time.sleep(10)
+            except zmq.Again:
+                logger.debug("message was there, now it's gone")
 
-        print("Whew, that was hard. Let rest for 10 seconds.")
-        time.sleep(10)
+        else:
+            logger.debug("Nothing better to do, lets reconnect")
+            socket.setsockopt(zmq.LINGER, 0)
+            socket.close()
+            poll.unregister(socket)
+            # Create new connection
+            socket = context.socket(zmq.REQ)
+            socket.connect(SERVER_ENDPOINT)
+            poll.register(socket, zmq.POLLIN)
 
 
 if __name__ == '__main__':

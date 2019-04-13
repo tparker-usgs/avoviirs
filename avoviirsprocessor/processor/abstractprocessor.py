@@ -92,14 +92,7 @@ class AbstractProcessor(ABC):
                              'line': GOLDENROD}}
             decorate = {'decorate': [text]}
 
-            # local.save_dataset('M15', filename=filename,
-            #                    writer='simple_image',
-            #                    overlay=overlay)
-
-            # img = get_enhanced_image(local['M15'], overlay=overlay,
-            #                          decorate=decorate)
             writer, save_kwargs = load_writer('simple_image')
-            print("TOMP SAYS: {}".format(save_kwargs))
             writer.save_dataset(local['M15'], overlay=overlay,
                                 decorate=decorate, filename=filename)
 

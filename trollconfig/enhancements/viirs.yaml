@@ -11,4 +11,4 @@ enhancements:
     - name: inverse
       method: !!python/name:satpy.enhancements.invert
       args:
-      - [true, true, true]
+      - [true]

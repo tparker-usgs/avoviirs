@@ -21,7 +21,7 @@ from trollsched.satpass import Pass
 from satpy.scene import Scene
 from satpy import find_files_and_readers
 from satpy.utils import debug_on
-from satpy.writers import get_enhanced_image, load_writer
+from satpy.writers import load_writer
 
 ORBIT_SLACK = timedelta(minutes=30)
 GRANULE_SPAN = timedelta(seconds=85.4)
@@ -95,6 +95,7 @@ class AbstractProcessor(ABC):
             writer, save_kwargs = load_writer('simple_image')
             writer.save_dataset(local['M15'], overlay=overlay,
                                 decorate=decorate, filename=filename)
+
 
 def processor_factory(message):
     topic = message.subject

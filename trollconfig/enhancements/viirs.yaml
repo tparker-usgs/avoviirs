@@ -4,7 +4,10 @@ enhancements:
     operations:
     - name: linear_stretch
       method: !!python/name:satpy.enhancements.stretch
-      kwargs: {stretch: 'linear', min_stretch: 0.0, max_stretch: 100.}
+      kwargs:
+        stretch: crude
+        min_stretch: 208.15 # -65c in k
+        max_stretch: 308.15 #  35c in k
     - name: inverse
       method: !!python/name:satpy.enhancements.invert
       args:

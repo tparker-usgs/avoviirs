@@ -58,6 +58,9 @@ def process_message(msg):
     scn = Scene(filenames=filenames, reader='viirs_sdr')
     try:
         scn.load(product)
+    except KeyError:
+        logger.error("I don't know how to make a %s", product)
+        return
     except ValueError:
         logger.debug("No M15 data, skipping")
         return

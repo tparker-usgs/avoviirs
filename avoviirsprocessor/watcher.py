@@ -57,9 +57,9 @@ def process_message(msg):
                                        filter_parameters=filter_parameters)
     scn = Scene(filenames=filenames, reader='viirs_sdr')
     try:
-        scn.load(str(product))
+        scn.load([product])
     except KeyError:
-        logger.error("TOMP SAYS I don't know how to make a :{}: :{}:".format(type(product), type('ir108')))
+        logger.error("I don't know how to make a %s", product)
         logger.error("I only know how to make a {}".format(scn.all_composite_names()))
         return
     except ValueError:

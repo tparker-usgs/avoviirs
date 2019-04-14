@@ -71,9 +71,18 @@ enhancements:
       method: !!python/name:satpy.enhancements.stretch
       kwargs:
         stretch: crude
-        min_stretch: 208.15 # -65c in k
-        max_stretch: 308.15 #  35c in k
-    - name: inverse
-      method: !!python/name:satpy.enhancements.invert
-      args:
-      - [true]
+        min_stretch: -6
+        max_stretch: 5
+    - name: colorize
+      method: !!python/name:satpy.enhancements.colorize
+      kwargs:
+        palettes: Colormap((0.0, (0.5, 0.0, 0.0)),
+                           (0.071428, (1.0, 0.0, 0.0)),
+                           (0.142856, (1.0, 0.5, 0.0)),
+                           (0.214284, (1.0, 1.0, 0.0)),
+                           (0.285712, (0.5, 1.0, 0.5)),
+                           (0.357140, (0.0, 1.0, 1.0)),
+                           (0.428568, (0.0, 0.5, 1.0)),
+                           (0.499999, (0.0, 0.0, 1.0)),
+                           (0.5000, (0.5, 0.5, 0.5)),
+                           (1.0, (1.0, 1.0, 1.0))))

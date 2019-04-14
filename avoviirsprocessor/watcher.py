@@ -57,7 +57,7 @@ def process_message(msg):
                                        filter_parameters=filter_parameters)
     scn = Scene(filenames=filenames, reader='viirs_sdr')
     try:
-        scn.load(['ir108'])
+        scn.load(product)
     except ValueError:
         logger.debug("No M15 data, skipping")
         return
@@ -97,9 +97,9 @@ def process_message(msg):
         time_str = data['start_time'].strftime('%Y%m%d.%H%M')
         filename_str = "{}/{}.{}.--.--.{}.{}.png"
         filename = filename_str.format(PNG_DIR, time_str, data['sensor'],
-                                       sector_def.area_id, 'ir108')
+                                       sector_def.area_id, product)
         print("writing {}".format(filename))
-        writer.save_dataset(local['ir108'], overlay=overlay,
+        writer.save_dataset(local[product], overlay=overlay,
                             decorate=decorate, filename=filename)
 
 

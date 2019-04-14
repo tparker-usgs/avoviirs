@@ -23,7 +23,6 @@ from pyresample import parse_area_file
 from trollsched.satpass import Pass
 from satpy.scene import Scene
 from satpy import find_files_and_readers
-from satpy.utils import debug_on
 from satpy.writers import load_writer
 
 
@@ -49,7 +48,7 @@ PPP_CONFIG_DIR = '/app/avoviirsprocessor/trollconfig'
 def process_message(msg):
     logger.debug("Processing message: %s", msg.encode())
     data = msg.data
-    product = msg.subect.split("/")[-1]
+    product = msg.subject.split("/")[-1]
     print("TOMP SAYS PRODUCT {}".format(product))
     filter_parameters = {'orbit': data['orbit_number']}
     filenames = find_files_and_readers(base_dir='/viirs/sdr',
@@ -68,7 +67,7 @@ def process_message(msg):
     for sector_def in parse_area_file(AREA_DEF):
         coverage = overpass.area_coverage(sector_def)
         logger.debug("{} coverage: {}".format(sector_def.area_id,
-                                                   coverage))
+                                              coverage))
         if coverage < .1:
             continue
 

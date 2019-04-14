@@ -6,3 +6,8 @@ composites:
     compositor: !!python/name:satpy.composites.GenericCompositor
     prerequisites:
     - name: M15
+  mir:
+    standard_name: mir
+    compositor: !!python/name:satpy.composites.GenericCompositor
+    prerequisites:
+    - name: I04

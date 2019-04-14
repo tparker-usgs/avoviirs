@@ -12,3 +12,16 @@ enhancements:
       method: !!python/name:satpy.enhancements.invert
       args:
       - [true]
+  mir:
+    standard_name: mir
+    operations:
+    - name: linear_stretch
+      method: !!python/name:satpy.enhancements.stretch
+      kwargs:
+        stretch: crude
+        min_stretch: 223.15 # -50c in k
+        max_stretch: 323.15 #  50c in k
+    - name: inverse
+      method: !!python/name:satpy.enhancements.invert
+      args:
+      - [true]

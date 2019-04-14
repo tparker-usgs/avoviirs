@@ -60,6 +60,7 @@ def process_message(msg):
         scn.load(product)
     except KeyError:
         logger.error("I don't know how to make a %s", product)
+        logger.error("I only know how to make a {}".format(scn.all_composite_names()))
         return
     except ValueError:
         logger.debug("No M15 data, skipping")

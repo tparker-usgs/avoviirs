@@ -99,9 +99,10 @@ def process_message(msg):
 
         writer, save_kwargs = load_writer('simple_image')
         time_str = data['start_time'].strftime('%Y%m%d.%H%M')
-        filename_str = "{}/{}.{}.--.--.{}.{}.png"
-        filename = filename_str.format(PNG_DIR, time_str, data['sensor'],
-                                       sector_def.area_id, product)
+        filename_str = "{}/{}.{}.{}.--.{}.{}.png"
+        filename = filename_str.format(PNG_DIR, time_str, data['orbit'],
+                                       data['sensor'][0], sector_def.area_id,
+                                       product)
         print("writing {}".format(filename))
         writer.save_dataset(local[product], overlay=overlay,
                             decorate=decorate, filename=filename)

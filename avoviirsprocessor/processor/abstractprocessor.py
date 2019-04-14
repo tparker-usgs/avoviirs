@@ -69,7 +69,6 @@ class AbstractProcessor(ABC):
                 continue
 
             local = scn.resample(sector_def)
-            filename = "{}/ir108-{}.png".format(PNG_DIR, sector_def.area_id)
             print("writing {}".format(filename))
             overlay = {'coast_dir': '/usr/local/gshhg',
                        'color': GOLDENROD,
@@ -93,6 +92,10 @@ class AbstractProcessor(ABC):
             decorate = {'decorate': [text]}
 
             writer, save_kwargs = load_writer('simple_image')
+            time_str = data['start_time'].strftime('%Y%m%d.%H%M')
+            filename_str = "{}/{}.{}.--.--.{}.{}.png"
+            filename = filename_str.format(PNG_DIR, time_str, data['sensor'],
+                                           sector_def.area_id, 'ir108')
             writer.save_dataset(local['ir108'], overlay=overlay,
                                 decorate=decorate, filename=filename)
 

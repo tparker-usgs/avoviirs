@@ -69,7 +69,6 @@ class AbstractProcessor(ABC):
                 continue
 
             local = scn.resample(sector_def)
-            print("writing {}".format(filename))
             overlay = {'coast_dir': '/usr/local/gshhg',
                        'color': GOLDENROD,
                        'width': 1,
@@ -96,6 +95,7 @@ class AbstractProcessor(ABC):
             filename_str = "{}/{}.{}.--.--.{}.{}.png"
             filename = filename_str.format(PNG_DIR, time_str, data['sensor'],
                                            sector_def.area_id, 'ir108')
+            print("writing {}".format(filename))
             writer.save_dataset(local['ir108'], overlay=overlay,
                                 decorate=decorate, filename=filename)
 

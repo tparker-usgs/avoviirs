@@ -28,7 +28,7 @@ composites:
     - name: DNB
   btd:
     standard_name: btd
-    compositor: !!python/name:satpy.composites.GenericCompositor
+    compositor: !!python/name:satpy.composites.DifferenceCompositor
     prerequisites:
     - name: M15
     - name: M16

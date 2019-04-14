@@ -6,8 +6,29 @@ composites:
     compositor: !!python/name:satpy.composites.GenericCompositor
     prerequisites:
     - name: M15
+  ir108hr:
+    standard_name: ir108hr
+    compositor: !!python/name:satpy.composites.GenericCompositor
+    prerequisites:
+    - name: I05
   mir:
     standard_name: mir
     compositor: !!python/name:satpy.composites.GenericCompositor
     prerequisites:
     - name: I04
+  vis:
+    standard_name: vis
+    compositor: !!python/name:satpy.composites.GenericCompositor
+    prerequisites:
+    - name: I01
+  dnb:
+    standard_name: dnb
+    compositor: !!python/name:satpy.composites.GenericCompositor
+    prerequisites:
+    - name: DNB
+  btd:
+    standard_name: btd
+    compositor: !!python/name:satpy.composites.GenericCompositor
+    prerequisites:
+    - name: M15
+    - name: M16

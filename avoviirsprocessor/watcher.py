@@ -50,6 +50,7 @@ class Updater(threading.Thread):
     def __init__(self, context):
         threading.Thread.__init__(self)
         self.socket = context.socket(zmq.SUB)
+        self.socket.setsockopt_string(zmq.SUBSCRIBE, '')
         self.socket.connect(UPDATE_PUBLISHER)
         self.task_waiting = False
         logger.debug("Updater initalized")

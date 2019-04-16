@@ -53,13 +53,14 @@ class Updater(threading.Thread):
         self.socket.connect(UPDATE_PUBLISHER)
 
     def run(self):
-        if self.socket.recv_string():
-            global task_waiting
-            task_waiting = True
-            logger.debug("Task waiting")
-        else:
-            task_waiting = False
-            logger.debug("No task waiting")
+        while True:
+            if self.socket.recv_string():
+                global task_waiting
+                task_waiting = True
+                logger.debug("Task waiting")
+            else:
+                task_waiting = False
+                logger.debug("No task waiting")
 
 
 def process_message(msg):

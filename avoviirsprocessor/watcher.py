@@ -51,15 +51,17 @@ class Updater(threading.Thread):
         threading.Thread.__init__(self)
         self.socket = context.socket(zmq.SUB)
         self.socket.connect(UPDATE_PUBLISHER)
+        self.task_waiting = False
+        logger.debug("Updater initalized")
 
     def run(self):
+        logger.debug("Updater running")
         while True:
             if self.socket.recv_string():
-                global task_waiting
-                task_waiting = True
+                self.task_waiting = True
                 logger.debug("Task waiting")
             else:
-                task_waiting = False
+                self.task_waiting = False
                 logger.debug("No task waiting")
 
 
@@ -133,8 +135,6 @@ def main():
     global logger
     logger = tutil.setup_logging("avoviirsprocessor.watcher errors")
 
-    global task_waiting
-    task_waiting = False
     context = zmq.Context()
     logger.debug("starting updater")
     updater = Updater(context)
@@ -146,7 +146,7 @@ def main():
 
     while True:
         logger.debug("top of main loop")
-        if task_waiting:
+        if updater.task_waiting:
             logger.debug("sending request")
             client.send(b"gimme something to do")
             logger.debug("waiting for response")

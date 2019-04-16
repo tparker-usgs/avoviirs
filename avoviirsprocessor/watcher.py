@@ -15,8 +15,9 @@
 import zmq
 import time
 import signal
+import threading
 
-from posttroll.message import Message
+from posttroll.message import Message, MessageError
 from datetime import timedelta
 import tomputils.util as tutil
 from pyresample import parse_area_file
@@ -25,9 +26,9 @@ from satpy.scene import Scene
 from satpy import find_files_and_readers
 from satpy.writers import load_writer
 
-
 REQUEST_TIMEOUT = 10000
-SERVER_ENDPOINT = "tcp://viirscollector:19091"
+TASK_SERVER = "tcp://viirscollector:19091"
+UPDATE_PUBLISHER = "tcp://viirscollector:19191"
 
 ORBIT_SLACK = timedelta(minutes=30)
 GRANULE_SPAN = timedelta(seconds=85.4)
@@ -45,6 +46,22 @@ TYPEFACE = "/app/avoviirsprocessor/Cousine-Bold.ttf"
 PPP_CONFIG_DIR = '/app/avoviirsprocessor/trollconfig'
 
 
+class Updater(threading.Thread):
+    def __init__(self, context):
+        threading.Thread.__init__(self)
+        self.socket = context.socket(zmq.SUB)
+        self.socket.connect(UPDATE_PUBLISHER)
+
+    def run(self):
+        if self.socket.recv_string():
+            global task_waiting
+            task_waiting = True
+            logger.debug("Task waiting")
+        else:
+            task_waiting = False
+            logger.debug("No task waiting")
+
+
 def process_message(msg):
     logger.debug("Processing message: %s", msg.encode())
     data = msg.data
@@ -60,7 +77,7 @@ def process_message(msg):
         scn.load([product])
     except KeyError:
         logger.error("I don't know how to make a %s", product)
-        logger.error("I only know how to make a {}".format(scn.all_composite_names()))
+        logger.error("I know: {}".format(scn.all_composite_names()))
         return
     except ValueError:
         logger.debug("No M15 data, skipping")
@@ -116,37 +133,29 @@ def main():
     logger = tutil.setup_logging("avoviirsprocessor.watcher errors")
 
     context = zmq.Context()
-    socket = context.socket(zmq.REQ)
-    socket.connect(SERVER_ENDPOINT)
 
-    poll = zmq.Poller()
-    poll.register(socket, zmq.POLLIN)
+    updater = Updater(context)
+    updater.start()
+
+    client = context.socket(zmq.REQ)
+    client.connect(TASK_SERVER)
 
     while True:
-        logger.debug("sending request")
-        socket.send(b"gimme something to do")
-        logger.debug("waiting for response")
-        socks = dict(poll.poll(REQUEST_TIMEOUT))
-        if socks.get(socket) == zmq.POLLIN:
-            try:
-                logger.debug("getting message")
-                msg_bytes = socket.recv(zmq.NOBLOCK)
-                msg = Message.decode(msg_bytes)
-                process_message(msg)
+        if task_waiting:
+            logger.debug("sending request")
+            client.send(b"gimme something to do")
+            logger.debug("waiting for response")
+            msg_bytes = client.recv()
+            if msg_bytes:
+                try:
+                    msg = Message.decode(msg_bytes)
+                    process_message(msg)
+                except MessageError as e:
+                    logger.error("Message decode error.")
+                    logger.exception(e)
                 logger.debug("Whew, that was hard. Let rest for 10 seconds.")
                 time.sleep(10)
-            except zmq.Again:
-                logger.debug("message was there, now it's gone")
-
-        else:
-            logger.debug("Nothing better to do, lets reconnect")
-            socket.setsockopt(zmq.LINGER, 0)
-            socket.close()
-            poll.unregister(socket)
-            # Create new connection
-            socket = context.socket(zmq.REQ)
-            socket.connect(SERVER_ENDPOINT)
-            poll.register(socket, zmq.POLLIN)
+        time.sleep(1)
 
 
 if __name__ == '__main__':

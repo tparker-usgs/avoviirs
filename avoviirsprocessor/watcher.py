@@ -121,7 +121,7 @@ def process_message(msg):
         writer, save_kwargs = load_writer('simple_image')
         time_str = data['start_time'].strftime('%Y%m%d.%H%M')
         filename_str = "{}/{}.{}.{}.--.{}.{}.png"
-        filename = filename_str.format(PNG_DIR, time_str, data['orbit'],
+        filename = filename_str.format(PNG_DIR, time_str, data['orbit_number'],
                                        data['sensor'][0], sector_def.area_id,
                                        product)
         print("writing {}".format(filename))

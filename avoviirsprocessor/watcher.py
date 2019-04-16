@@ -155,7 +155,8 @@ def main():
                     logger.exception(e)
                 logger.debug("Whew, that was hard. Let rest for 10 seconds.")
                 time.sleep(10)
-        time.sleep(1)
+        else:
+            time.sleep(1)
 
 
 if __name__ == '__main__':

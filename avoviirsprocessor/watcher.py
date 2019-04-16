@@ -135,13 +135,16 @@ def main():
     global task_waiting
     task_waiting = False
     context = zmq.Context()
+    logger.debug("starting updater")
     updater = Updater(context)
     updater.start()
+    logger.debug("started updater")
 
     client = context.socket(zmq.REQ)
     client.connect(TASK_SERVER)
 
     while True:
+        logger.debug("top of main loop")
         if task_waiting:
             logger.debug("sending request")
             client.send(b"gimme something to do")
@@ -157,6 +160,7 @@ def main():
                 logger.debug("Whew, that was hard. Let rest for 10 seconds.")
                 time.sleep(10)
         else:
+            logger.debug("No task waiting.")
             time.sleep(1)
 
 

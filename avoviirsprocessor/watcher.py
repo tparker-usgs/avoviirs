@@ -132,8 +132,9 @@ def main():
     global logger
     logger = tutil.setup_logging("avoviirsprocessor.watcher errors")
 
+    global task_waiting
+    task_waiting = False
     context = zmq.Context()
-
     updater = Updater(context)
     updater.start()
 

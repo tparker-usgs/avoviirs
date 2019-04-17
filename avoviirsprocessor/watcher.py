@@ -29,21 +29,10 @@ from satpy.writers import load_writer
 REQUEST_TIMEOUT = 10000
 TASK_SERVER = "tcp://viirscollector:19091"
 UPDATE_PUBLISHER = "tcp://viirscollector:19191"
-
-ORBIT_SLACK = timedelta(minutes=30)
-GRANULE_SPAN = timedelta(seconds=85.4)
-GOLDENROD = (218, 165, 32)
-PNG_DIR = '/data/omps/png'
-PNG_DEV_DIR = '/data/omps/png-dev'
-AREA_DEF = '/app/trollConfig/areas.def'
-TYPEFACE = "/app/fonts/Cousine-Bold.ttf"
-ORBIT_SLACK = timedelta(minutes=30)
-GRANULE_SPAN = timedelta(seconds=85.4)
 GOLDENROD = (218, 165, 32)
 PNG_DIR = '/viirs/png'
 AREA_DEF = '/app/avoviirsprocessor/trollconfig/areas.def'
 TYPEFACE = "/app/avoviirsprocessor/Cousine-Bold.ttf"
-PPP_CONFIG_DIR = '/app/avoviirsprocessor/trollconfig'
 
 
 class Updater(threading.Thread):
@@ -76,7 +65,6 @@ def process_message(msg):
                          'platform_name': data['platform_name']}
     filenames = find_files_and_readers(base_dir='/viirs/sdr',
                                        reader='viirs_sdr',
-                                       ppp_config_dir=PPP_CONFIG_DIR,
                                        filter_parameters=filter_parameters)
     scn = Scene(filenames=filenames, reader='viirs_sdr')
     try:

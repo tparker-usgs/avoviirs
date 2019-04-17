@@ -96,6 +96,9 @@ def process_message(msg):
         if coverage < .1:
             continue
 
+        # short circuit processing while memory issues are worked out
+        continue
+        
         local = scn.resample(sector_def)
         overlay = {'coast_dir': '/usr/local/gshhg',
                    'color': GOLDENROD,

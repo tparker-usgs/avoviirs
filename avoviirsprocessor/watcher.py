@@ -71,7 +71,8 @@ def process_message(msg):
     data = msg.data
     product = msg.subject.split("/")[-1]
     print("TOMP SAYS PRODUCT {}".format(product))
-    filter_parameters = {'orbit': data['orbit_number']}
+    filter_parameters = {'start_time': data['start_time'],
+                         'end_time': data['end_time']}
     filenames = find_files_and_readers(base_dir='/viirs/sdr',
                                        reader='viirs_sdr',
                                        ppp_config_dir=PPP_CONFIG_DIR,
@@ -98,7 +99,7 @@ def process_message(msg):
 
         # short circuit processing while memory issues are worked out
         continue
-        
+
         local = scn.resample(sector_def)
         overlay = {'coast_dir': '/usr/local/gshhg',
                    'color': GOLDENROD,

@@ -127,6 +127,7 @@ def process_message(msg):
         print("writing {}".format(filename))
         writer.save_dataset(local[product], overlay=overlay,
                             decorate=decorate, filename=filename)
+    logger.debug("All done with this taks.")
 
 
 def main():
@@ -161,6 +162,9 @@ def main():
                     logger.exception(e)
                 logger.debug("Whew, that was hard. Let rest for 10 seconds.")
                 time.sleep(10)
+            else:
+                logger.info("task_waiting, but no message received")
+                time.sleep(1)
         else:
             logger.debug("No task waiting.")
             time.sleep(1)

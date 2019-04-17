@@ -72,7 +72,8 @@ def process_message(msg):
     product = msg.subject.split("/")[-1]
     print("TOMP SAYS PRODUCT {}".format(product))
     filter_parameters = {'start_time': data['start_time'],
-                         'end_time': data['end_time']}
+                         'end_time': data['end_time'],
+                         'platform_name': data['platform_name']}
     filenames = find_files_and_readers(base_dir='/viirs/sdr',
                                        reader='viirs_sdr',
                                        ppp_config_dir=PPP_CONFIG_DIR,

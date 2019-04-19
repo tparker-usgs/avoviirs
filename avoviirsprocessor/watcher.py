@@ -97,9 +97,6 @@ def process_message(msg):
         label = label.format(start_string, data['platform_name'],
                              data['sensor'], IMAGE_LABEL[product])
 
-        # if data['platform_name'] == 'NOAA-20':
-        #     label += "Preliminary, Non-Operational Data"
-
         text = {'text': {'txt': label,
                          'align': {'top_bottom': 'bottom',
                                    'left_right': 'left'},
@@ -120,7 +117,8 @@ def process_message(msg):
 
         print("writing {}".format(filename))
         writer.save_dataset(local[product], overlay=overlay,
-                            decorate=decorate, filename=filename)
+                            decorate=decorate, fill_value=(0, 0, 0),
+                            filename=filename)
     logger.debug("All done with this taks.")
 
 

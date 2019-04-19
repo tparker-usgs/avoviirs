@@ -109,8 +109,6 @@ def process_message(msg):
                                        data['sensor'][0], sector_def.area_id,
                                        product)
 
-        continue
-
         print("writing {}".format(filename))
         writer.save_dataset(local[product], overlay=overlay,
                             decorate=decorate, filename=filename)

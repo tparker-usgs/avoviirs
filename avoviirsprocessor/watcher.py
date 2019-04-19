@@ -48,7 +48,7 @@ class Updater(threading.Thread):
         while True:
             update = self.socket.recv_json()
             self.task_waiting = update['queue length'] > 0
-            logger.debug("task waiting: {}", self.task_waiting)
+            logger.debug("task waiting: %s", str(self.task_waiting))
 
 
 def process_message(msg):

@@ -19,4 +19,20 @@ from avoviirsprocessor.processor import Processor
 class TIR(Processor):
     def __init__(self, message):
         super().__init__(self, message,
-                         'VIIRS thermal infrared brightness temperature(C))')
+                         'thermal infrared brightness tempeerature (c)')
+
+
+class MIR(Processor):
+    def __init__(self, message):
+        super().__init__(self, message,
+                         'mid-infrared brightness temperature (c)')
+
+class BTD(Processor):
+    def __init__(self, message):
+        super().__init__(self, message,
+                         'brightness temperature difference')
+
+class vis(Processor):
+    def __init__(self, message):
+        super().__init__(self, message,
+                         'true color')

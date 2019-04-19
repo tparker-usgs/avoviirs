@@ -6,7 +6,7 @@ from satpy.scene import Scene
 from satpy import find_files_and_readers
 from satpy.writers import load_writer
 
-from avoviirsprocessor.tir import TIR
+from avoviirsprocessor.tir import TIR, MIR, BTD, VIS
 
 REQUEST_TIMEOUT = 10000
 TASK_SERVER = "tcp://viirscollector:19091"
@@ -22,6 +22,12 @@ def processor_factory(message):
 
     if product == 'tir':
         return TIR(message)
+    elif product == 'mir':
+        return MIR(message)
+    elif product == 'btd':
+        return BTD(message)
+    elif product == 'vis':
+        return VIS(message)
     else:
         raise NotImplementedError("I don't know how to {}".format(product))
 

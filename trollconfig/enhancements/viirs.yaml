@@ -21,23 +21,11 @@ enhancements:
         stretch: crude
         min_stretch: 223.15 # -50c in k
         max_stretch: 323.15 #  50c in k
-    - name: inverse
-      method: !!python/name:satpy.enhancements.invert
-      args:
-      - [true]
   vis:
     standard_name: vis
     operations:
     - name: cira_stretch
       method: !!python/name:satpy.enhancements.cira_stretch
-      kwargs:
-        stretch: crude
-        min_stretch: 273.15 # -65c in k
-        max_stretch: 373.15 #  35c in k
-    - name: inverse
-      method: !!python/name:satpy.enhancements.invert
-      args:
-      - [true]
   btd:
     standard_name: btd
     operations:

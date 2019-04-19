@@ -24,6 +24,7 @@ from trollsched.satpass import Pass
 from satpy.scene import Scene
 from satpy import find_files_and_readers
 from satpy.writers import load_writer
+from avoviirsprocessor.processor import processor_factory
 
 REQUEST_TIMEOUT = 10000
 TASK_SERVER = "tcp://viirscollector:19091"
@@ -145,9 +146,12 @@ def main():
             if msg_bytes:
                 try:
                     msg = Message.decode(msg_bytes)
-                    process_message(msg)
+                    processor = processor_factory(msg)
+                    processor.process_message(msg)
                 except MessageError as e:
                     logger.error("Message decode error.")
+                    logger.exception(e)
+                except NotImplementedError as e:
                     logger.exception(e)
                 logger.debug("Whew, that was hard. Let rest for 10 seconds.")
                 time.sleep(10)

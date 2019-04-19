@@ -41,10 +41,8 @@ class Updater(threading.Thread):
         self.socket.setsockopt_string(zmq.SUBSCRIBE, '')
         self.socket.connect(UPDATE_PUBLISHER)
         self.task_waiting = False
-        logger.debug("Updater initalized")
 
     def run(self):
-        logger.debug("Updater running")
         while True:
             update = self.socket.recv_json()
             self.task_waiting = update['queue length'] > 0
@@ -55,7 +53,6 @@ def process_message(msg):
     logger.debug("Processing message: %s", msg.encode())
     data = msg.data
     product = msg.subject.split("/")[-1]
-    print("TOMP SAYS PRODUCT {}".format(product))
     filter_parameters = {'start_time': data['start_time'],
                          'end_time': data['end_time'],
                          'platform_name': data['platform_name']}
@@ -83,7 +80,6 @@ def process_message(msg):
             continue
 
         # short circuit processing while memory issues are worked out
-        continue
 
         local = scn.resample(sector_def)
         overlay = {'coast_dir': '/usr/local/gshhg',
@@ -113,6 +109,9 @@ def process_message(msg):
         filename = filename_str.format(PNG_DIR, time_str, data['orbit_number'],
                                        data['sensor'][0], sector_def.area_id,
                                        product)
+
+        continue
+
         print("writing {}".format(filename))
         writer.save_dataset(local[product], overlay=overlay,
                             decorate=decorate, filename=filename)
@@ -136,11 +135,8 @@ def main():
     client.connect(TASK_SERVER)
 
     while True:
-        logger.debug("top of main loop")
         if updater.task_waiting:
-            logger.debug("sending request")
             client.send(b"gimme something to do")
-            logger.debug("waiting for response")
             msg_bytes = client.recv()
             if msg_bytes:
                 try:

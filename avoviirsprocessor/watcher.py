@@ -18,7 +18,6 @@ import signal
 import threading
 
 from posttroll.message import Message, MessageError
-from datetime import timedelta
 import tomputils.util as tutil
 from pyresample import parse_area_file
 from trollsched.satpass import Pass
@@ -47,12 +46,9 @@ class Updater(threading.Thread):
     def run(self):
         logger.debug("Updater running")
         while True:
-            if self.socket.recv_string():
-                self.task_waiting = True
-                logger.debug("Task waiting")
-            else:
-                self.task_waiting = False
-                logger.debug("No task waiting")
+            update = self.socket.recv_json()
+            self.task_waiting = update['queue length'] > 0
+            logger.debug("task waiting: {}", self.task_waiting)
 
 
 def process_message(msg):

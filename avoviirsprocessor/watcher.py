@@ -117,7 +117,7 @@ def process_message(msg):
 
         print("writing {}".format(filename))
         writer.save_dataset(local[product], overlay=overlay,
-                            decorate=decorate, fill_value=(0, 0, 0),
+                            decorate=decorate, fill_value=0,
                             filename=filename)
     logger.debug("All done with this taks.")
 

@@ -206,15 +206,6 @@ REGION: 5kmRUNP {
 	AREA_EXTENT:    (-2500000, -2000000, 2500000, 2000000)
 };
 
-REGION: ALASKA {
-    NAME:       Alaska
-    PCS_ID:     ALASKA
-    PCS_DEF:    proj=laea, lat_0=55, lon_0=-150, a=6371228.0, units=m
-    XSIZE:      1000
-    YSIZE:      800
-    AREA_EXTENT:    (-2500000, -2500000, 2500000, 2500000)
-};
-
 #area_extent: (x_ll, y_ll, x_ur, y_ur)
 #echo "-159 56.5" | cs2cs +proj=latlong +datum=WGS84 +to +proj=laea +lat_0=60 +lon_0=-150 +a=6371228.0 +units=m
 

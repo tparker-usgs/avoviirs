@@ -1,19 +1,6 @@
 enhancements:
-  ir108:
-    standard_name: ir108
-    operations:
-    - name: linear_stretch
-      method: !!python/name:satpy.enhancements.stretch
-      kwargs:
-        stretch: crude
-        min_stretch: 208.15 # -65c in k
-        max_stretch: 308.15 #  35c in k
-    - name: inverse
-      method: !!python/name:satpy.enhancements.invert
-      args:
-      - [true]
-  ir108hr:
-    standard_name: ir108hr
+  tir:
+    standard_name: tir
     operations:
     - name: linear_stretch
       method: !!python/name:satpy.enhancements.stretch
@@ -41,25 +28,12 @@ enhancements:
   vis:
     standard_name: vis
     operations:
-    - name: linear_stretch
-      method: !!python/name:satpy.enhancements.stretch
+    - name: cira_stretch
+      method: !!python/name:satpy.enhancements.cira_stretch
       kwargs:
         stretch: crude
         min_stretch: 273.15 # -65c in k
         max_stretch: 373.15 #  35c in k
-    - name: inverse
-      method: !!python/name:satpy.enhancements.invert
-      args:
-      - [true]
-  dnb:
-    standard_name: dnb
-    operations:
-    - name: linear_stretch
-      method: !!python/name:satpy.enhancements.stretch
-      kwargs:
-        stretch: crude
-        min_stretch: 208.15 # -65c in k
-        max_stretch: 308.15 #  35c in k
     - name: inverse
       method: !!python/name:satpy.enhancements.invert
       args:

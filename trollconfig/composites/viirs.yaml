@@ -1,13 +1,8 @@
 sensor_name: viirs
 
 composites:
-  ir108:
-    standard_name: ir108
-    compositor: !!python/name:satpy.composites.GenericCompositor
-    prerequisites:
-    - name: M15
-  ir108hr:
-    standard_name: ir108hr
+  tir:
+    standard_name: tir
     compositor: !!python/name:satpy.composites.GenericCompositor
     prerequisites:
     - name: I05
@@ -20,12 +15,9 @@ composites:
     standard_name: vis
     compositor: !!python/name:satpy.composites.GenericCompositor
     prerequisites:
-    - name: I01
-  dnb:
-    standard_name: dnb
-    compositor: !!python/name:satpy.composites.GenericCompositor
-    prerequisites:
-    - name: DNB
+    - name: M03
+    - name: M04
+    - name: M05
   btd:
     standard_name: btd
     compositor: !!python/name:satpy.composites.DifferenceCompositor

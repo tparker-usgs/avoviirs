@@ -7,7 +7,7 @@ from satpy import find_files_and_readers
 from satpy.writers import to_image, add_overlay
 from pydecorate import DecoratorAGG
 import aggdraw
-from trollimage import colormap
+from from trollimage.colormap import Colormap
 
 REQUEST_TIMEOUT = 10000
 TASK_SERVER = "tcp://viirscollector:19091"
@@ -158,7 +158,7 @@ class BTD(Processor):
 
     def enhance_image(self, img):
         img.crude_stretch(-6, 5)
-        btd_colors = colormap((0.0, (0.5, 0.0, 0.0)),
+        btd_colors = Colormap((0.0, (0.5, 0.0, 0.0)),
                               (0.071428, (1.0, 0.0, 0.0)),
                               (0.142856, (1.0, 0.5, 0.0)),
                               (0.214284, (1.0, 1.0, 0.0)),

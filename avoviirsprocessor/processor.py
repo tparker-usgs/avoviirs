@@ -71,16 +71,14 @@ class Processor(object):
                 sectors.append(sector_def)
         return sectors
 
-    def apply_label(self, img):
-        data = self.data
-        pilimg = img.pil_image()
-
+    def apply_label(self, pilimg):
         dc = DecoratorAGG(pilimg)
         dc.align_bottom()
         font = aggdraw.Font(GOLDENROD, TYPEFACE, size=14)
 
         start_string = data.strftime('%m/%d/%Y %H:%M UTC')
-        label = "{} {} VIIRS {}".format(start_string, data['platform_name'],
+        label = "{} {} VIIRS {}".format(start_string,
+                                        self.data['platform_name'],
                                         self.product_label)
         font = aggdraw.Font(GOLDENROD, TYPEFACE, size=14)
         dc.add_text(start_string + " " + label, font=font, height=30,

@@ -35,12 +35,12 @@ def processor_factory(message):
 
 
 class Processor(object):
-    def __init__(self, message, product_label):
+    def __init__(self, message, product, product_label):
         self.message = message
         self.product_label = product_label
         self.logger = tutil.setup_logging("avoviirsprocessor.watcher errors")
         self.data = message.data
-        self.product = message.subject.split("/")[-1]
+        self.product = product
 
     def enhance_image(self, img):
         raise NotImplementedError("enhance_image not implemented")
@@ -102,7 +102,6 @@ class Processor(object):
         message = self.message
         self.logger.debug("Processing message: %s", message.encode())
         data = message.data
-        product = message.subject.split("/")[-1]
         scn = self.create_scene()
         try:
             self.load_data(scn)
@@ -112,14 +111,14 @@ class Processor(object):
 
         for sector_def in self.find_sectors(scn):
             local = scn.resample(sector_def)
-            img = self.get_enhanced_pilimage(local[product].squeeze())
+            img = self.get_enhanced_pilimage(local[self.product].squeeze())
             time_str = data['start_time'].strftime('%Y%m%d.%H%M')
             filename_str = "{}/{}.{}.{}.--.{}.{}.png"
             filename = filename_str.format(PNG_DIR, time_str,
                                            data['orbit_number'],
                                            data['sensor'][0],
                                            sector_def.area_id,
-                                           product)
+                                           self.product)
 
             print("writing {}".format(filename))
             img.save(filename)
@@ -129,7 +128,7 @@ class Processor(object):
 
 class TIR(Processor):
     def __init__(self, message):
-        super().__init__(message,
+        super().__init__(message, 'tir',
                          'thermal infrared brightness tempeerature (c)')
 
     def enhance_image(self, img):
@@ -143,7 +142,7 @@ class TIR(Processor):
 
 class MIR(Processor):
     def __init__(self, message):
-        super().__init__(message,
+        super().__init__(message, 'mir',
                          'mid-infrared brightness temperature (c)')
 
     def enhance_image(self, img):
@@ -156,7 +155,7 @@ class MIR(Processor):
 
 class BTD(Processor):
     def __init__(self, message):
-        super().__init__(message,
+        super().__init__(message, 'btd',
                          'brightness temperature difference')
 
     def enhance_image(self, img):
@@ -181,7 +180,7 @@ class BTD(Processor):
 class VIS(Processor):
     def __init__(self, message):
         super().__init__(message,
-                         'true color')
+                         'vis', 'true color')
 
     def enhance_image(self, img):
         img.cira_stretch()

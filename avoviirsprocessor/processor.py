@@ -66,7 +66,7 @@ class Processor(object):
         self.logger.debug("Processing message: %s", message.encode())
         data = message.data
         product = message.subject.split("/")[-1]
-        scn = self.create_scene(data)
+        scn = self.create_scene()
         try:
             scn.load([product])
         except KeyError:

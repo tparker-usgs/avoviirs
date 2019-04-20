@@ -6,7 +6,6 @@ from satpy.scene import Scene
 from satpy import find_files_and_readers
 from satpy.writers import load_writer
 
-from avoviirsprocessor.tir import TIR, MIR, BTD, VIS
 
 REQUEST_TIMEOUT = 10000
 TASK_SERVER = "tcp://viirscollector:19091"
@@ -115,3 +114,27 @@ class Processor(object):
             writer.save_dataset(local[product], overlay=overlay,
                                 decorate=decorate, filename=filename)
         logger.debug("All done with this taks.")
+
+
+class TIR(Processor):
+    def __init__(self, message):
+        super().__init__(self, message,
+                         'thermal infrared brightness tempeerature (c)')
+
+
+class MIR(Processor):
+    def __init__(self, message):
+        super().__init__(self, message,
+                         'mid-infrared brightness temperature (c)')
+
+
+class BTD(Processor):
+    def __init__(self, message):
+        super().__init__(self, message,
+                         'brightness temperature difference')
+
+
+class VIS(Processor):
+    def __init__(self, message):
+        super().__init__(self, message,
+                         'true color')

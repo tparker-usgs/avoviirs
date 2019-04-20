@@ -118,23 +118,23 @@ class Processor(object):
 
 class TIR(Processor):
     def __init__(self, message):
-        super().__init__(self, message,
+        super().__init__(message,
                          'thermal infrared brightness tempeerature (c)')
 
 
 class MIR(Processor):
     def __init__(self, message):
-        super().__init__(self, message,
+        super().__init__(message,
                          'mid-infrared brightness temperature (c)')
 
 
 class BTD(Processor):
     def __init__(self, message):
-        super().__init__(self, message,
+        super().__init__(message,
                          'brightness temperature difference')
 
 
 class VIS(Processor):
     def __init__(self, message):
-        super().__init__(self, message,
+        super().__init__(message,
                          'true color')

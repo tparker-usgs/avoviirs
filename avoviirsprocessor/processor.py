@@ -3,8 +3,13 @@ import tomputils.util as tutil
 from pyresample import parse_area_file
 from trollsched.satpass import Pass
 from satpy.scene import Scene
-from satpy import find_files_and_readers
-from satpy.writers import load_writer, to_image, add_overlay, add_decorate
+from satpy import find_files_and_readers, CHUNK_SIZE
+from satpy.writers import load_writer, to_image, add_decorate
+
+import dask.array as da
+import numpy as np
+import xarray as xr
+from trollimage.xrimage import XRImage
 
 
 REQUEST_TIMEOUT = 10000
@@ -14,6 +19,7 @@ GOLDENROD = (218, 165, 32)
 PNG_DIR = '/viirs/png'
 AREA_DEF = '/app/avoviirsprocessor/trollconfig/areas.def'
 TYPEFACE = "/app/avoviirsprocessor/Cousine-Bold.ttf"
+COAST_DIR = '/usr/local/gshhg'
 
 
 def processor_factory(message):
@@ -60,13 +66,57 @@ class Processor(object):
                 sectors.append(sector_def)
         return sectors
 
+    def add_overlay(self, orig, area):
+        from pycoast import ContourWriterAGG
+        self.logger.info("Add coastlines and political borders to image.")
+
+        x_resolution = ((area.area_extent[2] -
+                         area.area_extent[0]) /
+                        area.x_size)
+        y_resolution = ((area.area_extent[3] -
+                         area.area_extent[1]) /
+                        area.y_size)
+        res = min(x_resolution, y_resolution)
+
+        if res > 25000:
+            resolution = "c"
+        elif res > 5000:
+            resolution = "l"
+        elif res > 1000:
+            resolution = "i"
+        elif res > 200:
+            resolution = "h"
+        else:
+            resolution = "f"
+
+        self.logger.debug("Automagically choose resolution %s", resolution)
+
+        if hasattr(orig, 'convert'):
+            orig = orig.convert('RGBA' if orig.mode.endswith('A') else 'RGB')
+        img = orig.pil_image(fill_value=0)
+        cw_ = ContourWriterAGG(COAST_DIR)
+        cw_.add_coastlines(img, area, outline=GOLDENROD,
+                           resolution=resolution, width=1,
+                           level=1)
+        cw_.add_borders(img, area, outline=GOLDENROD,
+                        resolution=resolution, width=1,
+                        level=1)
+        arr = da.from_array(np.array(img) / 255.0, chunks=CHUNK_SIZE)
+
+        new_data = xr.DataArray(arr, dims=['y', 'x', 'bands'],
+                                coords={'y': orig.data.coords['y'],
+                                        'x': orig.data.coords['x'],
+                                        'bands': list(img.mode)},
+                                attrs=orig.data.attrs)
+        return XRImage(new_data)
+
     def get_enhanced_image(self, dataset, enhancer, overlay, decorate):
         img = to_image(dataset)
 
         enhancer.add_sensor_enhancements('viirs')
         enhancer.apply(img, **dataset.attrs)
 
-        img = add_overlay(img, dataset.attrs['area'], fill_value=0, **overlay)
+        img = self.add_overlay(img, dataset.attrs['area'])
         img = add_decorate(img, fill_value=0, **decorate)
 
         return img

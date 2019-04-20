@@ -7,7 +7,7 @@ from satpy import find_files_and_readers
 from satpy.writers import to_image, add_overlay
 from pydecorate import DecoratorAGG
 import aggdraw
-from from trollimage.colormap import Colormap
+from trollimage.colormap import Colormap
 
 REQUEST_TIMEOUT = 10000
 TASK_SERVER = "tcp://viirscollector:19091"
@@ -84,10 +84,10 @@ class Processor(object):
         dc.add_text(start_string + " " + label, font=font, height=30,
                     extend=True, bg_opacity=128, bg='black')
 
-    def get_enhanced_pilimage(self, dataset):
+    def get_enhanced_pilimage(self, dataset, area):
         img = to_image(dataset)
         self.enhance_image(img)
-        img = add_overlay(img, area=dataset.attrs['area'], coast_dir=COAST_DIR,
+        img = add_overlay(img, area=area, coast_dir=COAST_DIR,
                           color=GOLDENROD, width=1, fill_value=0)
 
         pilimg = img.pil_image()
@@ -109,7 +109,8 @@ class Processor(object):
 
         for sector_def in self.find_sectors(scn):
             local = scn.resample(sector_def)
-            img = self.get_enhanced_pilimage(local[self.product].squeeze())
+            img = self.get_enhanced_pilimage(local[self.product].squeeze(),
+                                             sector_def)
             time_str = data['start_time'].strftime('%Y%m%d.%H%M')
             filename_str = "{}/{}.{}.{}.--.{}.{}.png"
             filename = filename_str.format(PNG_DIR, time_str,

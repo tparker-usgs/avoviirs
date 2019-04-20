@@ -6,17 +6,13 @@ from satpy.scene import Scene
 from satpy import find_files_and_readers
 from satpy.writers import to_image, add_overlay
 from pydecorate import DecoratorAGG
-import aggdraw
 from trollimage.colormap import Colormap
 
-REQUEST_TIMEOUT = 10000
-TASK_SERVER = "tcp://viirscollector:19091"
-UPDATE_PUBLISHER = "tcp://viirscollector:19191"
 GOLDENROD = (218, 165, 32)
 PNG_DIR = '/viirs/png'
-AREA_DEF = '/app/avoviirsprocessor/trollconfig/areas.def'
 TYPEFACE = "/app/avoviirsprocessor/Cousine-Bold.ttf"
 COAST_DIR = '/usr/local/gshhg'
+AREA_DEF = '/app/avoviirsprocessor/trollconfig/areas.def'
 
 
 def processor_factory(message):

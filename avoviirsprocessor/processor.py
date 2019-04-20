@@ -4,33 +4,10 @@ from pyresample import parse_area_file
 from trollsched.satpass import Pass
 from satpy.scene import Scene
 from satpy import find_files_and_readers
-from satpy.writers import load_writer, to_image, add_decorate, add_overlay
-import json
-from posttroll.subscriber import Subscribe
-from posttroll.message import datetime_encoder
-from pprint import pprint
-from mpop.satellites import PolarFactory
-from datetime import timedelta, datetime
-from dateutil import parser
-from pyorbital.orbital import Orbital
-from mpop.utils import debug_on
-from trollsched.satpass import Pass
-from mpop.projector import get_area_def
-import mpop.imageo.geo_image as geo_image
-#from PIL import Image
+from satpy.writers import to_image, add_overlay
 from pydecorate import DecoratorAGG
 import aggdraw
-from trollimage.colormap import rdbu
-from trollsched.satpass import Pass
-from mpop.projector import get_area_def
-import os
-import os.path
-import tomputils.mattermost as mm
 from trollimage import colormap
-import sys
-import traceback
-import argparse
-import satpy.enhancements
 
 REQUEST_TIMEOUT = 10000
 TASK_SERVER = "tcp://viirscollector:19091"

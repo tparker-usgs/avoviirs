@@ -5,7 +5,31 @@ from trollsched.satpass import Pass
 from satpy.scene import Scene
 from satpy import find_files_and_readers
 from satpy.writers import load_writer, to_image, add_decorate, add_overlay
-
+import json
+from posttroll.subscriber import Subscribe
+from posttroll.message import datetime_encoder
+from pprint import pprint
+from mpop.satellites import PolarFactory
+from datetime import timedelta, datetime
+from dateutil import parser
+from pyorbital.orbital import Orbital
+from mpop.utils import debug_on
+from trollsched.satpass import Pass
+from mpop.projector import get_area_def
+import mpop.imageo.geo_image as geo_image
+#from PIL import Image
+from pydecorate import DecoratorAGG
+import aggdraw
+from trollimage.colormap import rdbu
+from trollsched.satpass import Pass
+from mpop.projector import get_area_def
+import os
+import os.path
+import tomputils.mattermost as mm
+from trollimage import colormap
+import sys
+import traceback
+import argparse
 
 REQUEST_TIMEOUT = 10000
 TASK_SERVER = "tcp://viirscollector:19091"
@@ -61,7 +85,22 @@ class Processor(object):
                 sectors.append(sector_def)
         return sectors
 
-    def get_enhanced_image(self, dataset, enhancer, overlay, decorate):
+    def apply_label(self, img):
+        data = self.data
+        pilimg = img.pil_image()
+
+        dc = DecoratorAGG(pilimg)
+        dc.align_bottom()
+        font = aggdraw.Font(GOLDENROD, TYPEFACE, size=14)
+
+        start_string = data.strftime('%m/%d/%Y %H:%M UTC')
+        label = "{} {} VIIRS {}".format(start_string, data['platform_name'],
+                                        self.product_label)
+        font = aggdraw.Font(GOLDENROD, TYPEFACE, size=14)
+        dc.add_text(start_string + " " + label, font=font, height=30,
+                    extend=True, bg_opacity=128, bg='black')
+
+    def get_enhanced_pilimage(self, dataset, enhancer):
         img = to_image(dataset)
 
         enhancer.add_sensor_enhancements('viirs')
@@ -69,9 +108,11 @@ class Processor(object):
 
         img = add_overlay(img, area=dataset.attrs['area'], coast_dir=COAST_DIR,
                           color=GOLDENROD, width=1, fill_value=0)
-        img = add_decorate(img, fill_value=0, **decorate)
 
-        return img
+        pilimg = img.pil_image()
+        img = self.apply_label(pilimg)
+
+        return pilimg
 
     def process_message(self):
         logger = self.logger
@@ -92,29 +133,8 @@ class Processor(object):
 
         for sector_def in self.find_sectors(scn):
             local = scn.resample(sector_def)
-            overlay = {'coast_dir': '/usr/local/gshhg',
-                       'color': GOLDENROD,
-                       'width': 1,
-                       'level_coast': 1,
-                       'level_borders': 2}
-
-            start_string = data['start_time'].strftime('%m/%d/%Y %H:%M UTC')
-            label = "{} {} {}"
-            label = label.format(start_string, data['platform_name'],
-                                 self.product_label)
-
-            text = {'text': {'txt': label,
-                             'align': {'top_bottom': 'bottom',
-                                       'left_right': 'right'},
-                             'font': TYPEFACE,
-                             'font_size': 14,
-                             'height': 30,
-                             'bg': 'black',
-                             'bg_opacity': 128,
-                             'line': GOLDENROD}}
-            decorate = {'decorate': [text]}
-
-            writer, save_kwargs = load_writer('simple_image')
+            img = self.get_enhanced_pilimage(local[product].squeeze(),
+                                          writer.enhancer)
             time_str = data['start_time'].strftime('%Y%m%d.%H%M')
             filename_str = "{}/{}.{}.{}.--.{}.{}.png"
             filename = filename_str.format(PNG_DIR, time_str,
@@ -124,12 +144,7 @@ class Processor(object):
                                            product)
 
             print("writing {}".format(filename))
-            # writer.save_dataset(local[product], overlay=overlay,
-            #                     decorate=decorate, filename=filename)
-            img = self.get_enhanced_image(local[product].squeeze(),
-                                          writer.enhancer, overlay, decorate)
-
-            writer.save_image(img, filename=filename, compute=True)
+            img.save(filename)
 
         logger.debug("All done with this taks.")
 

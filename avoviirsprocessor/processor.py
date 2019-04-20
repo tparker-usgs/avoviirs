@@ -4,7 +4,7 @@ from pyresample import parse_area_file
 from trollsched.satpass import Pass
 from satpy.scene import Scene
 from satpy import find_files_and_readers
-from satpy.writers import load_writer
+from satpy.writers import load_writer, get_enhanced_image
 
 
 REQUEST_TIMEOUT = 10000
@@ -111,8 +111,14 @@ class Processor(object):
                                            product)
 
             print("writing {}".format(filename))
-            writer.save_dataset(local[product], overlay=overlay,
-                                decorate=decorate, filename=filename)
+            # writer.save_dataset(local[product], overlay=overlay,
+            #                     decorate=decorate, filename=filename)
+            img = get_enhanced_image(local[product].squeeze(),
+                                     enhance=writer.enhancer, overlay=overlay,
+                                     decorate=decorate, fill_value=0)
+
+            writer.save_image(img, filename=filename, compute=True)
+
         logger.debug("All done with this taks.")
 
 

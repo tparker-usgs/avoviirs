@@ -1,4 +1,4 @@
-FROM tparkerusgs/avopytroll:release-1.7.0
+FROM tparkerusgs/avopytroll:release-1.8.0
 
 WORKDIR /app
 WORKDIR avoviirsprocessor

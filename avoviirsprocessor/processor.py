@@ -137,6 +137,7 @@ class TIR(Processor):
         img.invert()
 
     def load_data(self, scn):
+        scn.load(['M15'])
         scn['tir'] = scn['M15']
 
 
@@ -149,6 +150,7 @@ class MIR(Processor):
         img.crude_stretch(223.15, 323.15)  # -50c - 50c
 
     def load_data(self, scn):
+        scn.load(['I04'])
         scn['mir'] = scn['I04']
 
 
@@ -172,6 +174,7 @@ class BTD(Processor):
         img.colorize(btd_colors)
 
     def load_data(self, scn):
+        scn.load(['M15', 'M16'])
         scn['btd'] = scn['M15'] - scn['M16']
 
 
@@ -184,4 +187,5 @@ class VIS(Processor):
         img.cira_stretch()
 
     def load_data(self, scn):
+        scn.load(['true_color'])
         scn['vis'] = scn['true_color']

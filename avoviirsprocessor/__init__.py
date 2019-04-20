@@ -16,4 +16,4 @@ Process VIIRS data at AVO
 """
 
 
-__version__ = "3.8.9"
+__version__ = "3.8.10"

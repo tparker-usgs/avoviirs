@@ -88,7 +88,7 @@ class Processor(object):
 
     def get_enhanced_pilimage(self, dataset):
         img = to_image(dataset)
-        self.enhance(img)
+        self.enhance_image(img)
         img = add_overlay(img, area=dataset.attrs['area'], coast_dir=COAST_DIR,
                           color=GOLDENROD, width=1, fill_value=0)
 

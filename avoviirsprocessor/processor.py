@@ -4,7 +4,7 @@ from pyresample import parse_area_file
 from trollsched.satpass import Pass
 from satpy.scene import Scene
 from satpy import find_files_and_readers
-from satpy.writers import load_writer, get_enhanced_image
+from satpy.writers import load_writer, to_image, add_overlay, add_decorate
 
 
 REQUEST_TIMEOUT = 10000
@@ -60,6 +60,17 @@ class Processor(object):
                 sectors.append(sector_def)
         return sectors
 
+    def get_enhanced_image(self, dataset, enhancer, overlay, decorate):
+        img = to_image(dataset)
+
+        enhancer.add_sensor_enhancements('viirs')
+        enhancer.apply(img, **dataset.attrs)
+
+        img = add_overlay(img, dataset.attrs['area'], fill_value=0, **overlay)
+        img = add_decorate(img, fill_value=0, **decorate)
+
+        return img
+
     def process_message(self):
         logger = self.logger
         message = self.message
@@ -113,9 +124,8 @@ class Processor(object):
             print("writing {}".format(filename))
             # writer.save_dataset(local[product], overlay=overlay,
             #                     decorate=decorate, filename=filename)
-            img = get_enhanced_image(local[product].squeeze(),
-                                     enhance=writer.enhancer, overlay=overlay,
-                                     decorate=decorate, fill_value=0)
+            img = self.get_enhanced_image(local[product].squeeze(),
+                                          writer.enhancer, overlay, decorate)
 
             writer.save_image(img, filename=filename, compute=True)
 

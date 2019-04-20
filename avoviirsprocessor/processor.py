@@ -74,15 +74,14 @@ class Processor(object):
     def apply_label(self, pilimg):
         dc = DecoratorAGG(pilimg)
         dc.align_bottom()
-        font = aggdraw.Font(GOLDENROD, TYPEFACE, size=14)
 
         start_string = self.data['start_time'].strftime('%m/%d/%Y %H:%M UTC')
         label = "{} {} VIIRS {}".format(start_string,
                                         self.data['platform_name'],
                                         self.product_label)
-        font = aggdraw.Font(GOLDENROD, TYPEFACE, size=14)
-        dc.add_text(start_string + " " + label, font=font, height=30,
-                    extend=True, bg_opacity=128, bg='black')
+        dc.add_text(label, font=TYPEFACE, height=30, extend=True,
+                    bg_opacity=128, bg='black', line=GOLDENROD,
+                    font_size=14)
 
     def get_enhanced_pilimage(self, dataset, area):
         img = to_image(dataset)

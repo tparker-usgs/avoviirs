@@ -76,7 +76,7 @@ class Processor(object):
         dc.align_bottom()
         font = aggdraw.Font(GOLDENROD, TYPEFACE, size=14)
 
-        start_string = self.data.strftime('%m/%d/%Y %H:%M UTC')
+        start_string = self.data['start_time'].strftime('%m/%d/%Y %H:%M UTC')
         label = "{} {} VIIRS {}".format(start_string,
                                         self.data['platform_name'],
                                         self.product_label)

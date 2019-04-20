@@ -77,7 +77,7 @@ class Processor(object):
             logger.debug("No M15 data, skipping")
             return
 
-        for sector_def in self.find_sectors():
+        for sector_def in self.find_sectors(scn):
             local = scn.resample(sector_def)
             overlay = {'coast_dir': '/usr/local/gshhg',
                        'color': GOLDENROD,

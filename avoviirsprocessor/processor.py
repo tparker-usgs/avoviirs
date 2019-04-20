@@ -30,6 +30,7 @@ from trollimage import colormap
 import sys
 import traceback
 import argparse
+import satpy.enhancements
 
 REQUEST_TIMEOUT = 10000
 TASK_SERVER = "tcp://viirscollector:19091"
@@ -61,6 +62,14 @@ class Processor(object):
         self.message = message
         self.product_label = product_label
         self.logger = tutil.setup_logging("avoviirsprocessor.watcher errors")
+        self.data = message.data
+        self.product = message.subject.split("/")[-1]
+
+    def enhance_image(self, img):
+        raise NotImplementedError("enhance_image not implemented")
+
+    def load_data(self):
+        raise NotImplementedError("load_data not implemented")
 
     def create_scene(self):
         data = self.message.data
@@ -100,12 +109,9 @@ class Processor(object):
         dc.add_text(start_string + " " + label, font=font, height=30,
                     extend=True, bg_opacity=128, bg='black')
 
-    def get_enhanced_pilimage(self, dataset, enhancer):
+    def get_enhanced_pilimage(self, dataset):
         img = to_image(dataset)
-
-        enhancer.add_sensor_enhancements('viirs')
-        enhancer.apply(img, **dataset.attrs)
-
+        self.enhance(img)
         img = add_overlay(img, area=dataset.attrs['area'], coast_dir=COAST_DIR,
                           color=GOLDENROD, width=1, fill_value=0)
 
@@ -122,19 +128,14 @@ class Processor(object):
         product = message.subject.split("/")[-1]
         scn = self.create_scene()
         try:
-            scn.load([product])
-        except KeyError:
-            logger.error("I don't know how to make a %s", product)
-            logger.error("I know: {}".format(scn.all_composite_names()))
-            return
+            self.load_data(scn)
         except ValueError:
-            logger.debug("No M15 data, skipping")
+            logger.debug("missing data, skipping")
             return
 
         for sector_def in self.find_sectors(scn):
             local = scn.resample(sector_def)
-            img = self.get_enhanced_pilimage(local[product].squeeze(),
-                                          writer.enhancer)
+            img = self.get_enhanced_pilimage(local[product].squeeze())
             time_str = data['start_time'].strftime('%Y%m%d.%H%M')
             filename_str = "{}/{}.{}.{}.--.{}.{}.png"
             filename = filename_str.format(PNG_DIR, time_str,
@@ -154,11 +155,24 @@ class TIR(Processor):
         super().__init__(message,
                          'thermal infrared brightness tempeerature (c)')
 
+    def enhance_image(self, img):
+        img.crude_stretch(208.15, 308.15)  # -65c - 35c
+        img.invert()
+
+    def load_data(self, scn):
+        scn['tir'] = scn['M15']
+
 
 class MIR(Processor):
     def __init__(self, message):
         super().__init__(message,
                          'mid-infrared brightness temperature (c)')
+
+    def enhance_image(self, img):
+        img.crude_stretch(223.15, 323.15)  # -50c - 50c
+
+    def load_data(self, scn):
+        scn['mir'] = scn['I04']
 
 
 class BTD(Processor):
@@ -166,8 +180,31 @@ class BTD(Processor):
         super().__init__(message,
                          'brightness temperature difference')
 
+    def enhance_image(self, img):
+        img.crude_stretch(-6, 5)
+        btd_colors = colormap((0.0, (0.5, 0.0, 0.0)),
+                              (0.071428, (1.0, 0.0, 0.0)),
+                              (0.142856, (1.0, 0.5, 0.0)),
+                              (0.214284, (1.0, 1.0, 0.0)),
+                              (0.285712, (0.5, 1.0, 0.5)),
+                              (0.357140, (0.0, 1.0, 1.0)),
+                              (0.428568, (0.0, 0.5, 1.0)),
+                              (0.499999, (0.0, 0.0, 1.0)),
+                              (0.5000, (0.5, 0.5, 0.5)),
+                              (1.0, (1.0, 1.0, 1.0)))
+        img.colorize(btd_colors)
+
+    def load_data(self, scn):
+        scn['btd'] = scn['M15'] - scn['M16']
+
 
 class VIS(Processor):
     def __init__(self, message):
         super().__init__(message,
                          'true color')
+
+    def enhance_image(self, img):
+        img.cira_stretch()
+
+    def load_data(self, scn):
+        scn['vis'] = scn['true_color']

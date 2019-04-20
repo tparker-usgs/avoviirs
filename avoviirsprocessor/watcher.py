@@ -147,7 +147,7 @@ def main():
                 try:
                     msg = Message.decode(msg_bytes)
                     processor = processor_factory(msg)
-                    processor.process_message(msg)
+                    processor.process_message()
                 except MessageError as e:
                     logger.error("Message decode error.")
                     logger.exception(e)

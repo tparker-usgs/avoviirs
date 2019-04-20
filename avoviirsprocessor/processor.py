@@ -7,7 +7,7 @@ from satpy import find_files_and_readers
 from satpy.writers import to_image, add_overlay
 from pydecorate import DecoratorAGG
 import aggdraw
-from from trollimage.colormap import Colormap
+from trollimage.colormap import Colormap
 
 REQUEST_TIMEOUT = 10000
 TASK_SERVER = "tcp://viirscollector:19091"

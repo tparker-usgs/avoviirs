@@ -7,7 +7,7 @@ from satpy import find_files_and_readers
 from satpy.writers import to_image, add_overlay
 from pydecorate import DecoratorAGG
 from trollimage.colormap import Colormap
-from satpy.dataset import combine_attrs
+from satpy.dataset import combine_metadata
 
 
 GOLDENROD = (218, 165, 32)
@@ -171,7 +171,7 @@ class BTD(Processor):
     def load_data(self, scn):
         scn.load(['M15', 'M16'])
         scn['btd'] = scn['M15'] - scn['M16']
-        scn['btd'].attrs = combine_attrs(scn['M15'], scn['M16'])
+        scn['btd'].attrs = combine_metadata(scn['M15'], scn['M16'])
 
 
 class VIS(Processor):

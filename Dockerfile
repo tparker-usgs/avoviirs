@@ -1,4 +1,4 @@
-FROM tparkerusgs/avopytroll:release-1.8.5
+FROM tparkerusgs/avopytroll:release-1.8.6
 
 WORKDIR /app
 COPY trollconfig/* trollconfig/

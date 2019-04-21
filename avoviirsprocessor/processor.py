@@ -8,7 +8,7 @@ from satpy.writers import to_image, add_overlay
 from pydecorate import DecoratorAGG
 from trollimage.colormap import Colormap
 from satpy.dataset import combine_metadata
-
+from satpy.enhancements import cira_stretch
 
 GOLDENROD = (218, 165, 32)
 PNG_DIR = '/viirs/png'
@@ -180,7 +180,7 @@ class VIS(Processor):
                          'vis', 'true color')
 
     def enhance_image(self, img):
-        img.cira_stretch()
+        cira_stretch(img)
 
     def load_data(self, scn):
         scn.load(['true_color'])

@@ -100,8 +100,8 @@ class Processor(object):
         scn = self.create_scene()
         try:
             self.load_data(scn)
-        except ValueError:
-            logger.debug("missing data, skipping")
+        except KeyError:
+            logger.excpetion("missing data, skipping")
             return
 
         for sector_def in self.find_sectors(scn):

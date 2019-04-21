@@ -14,7 +14,7 @@ GOLDENROD = (218, 165, 32)
 PNG_DIR = '/viirs/png'
 TYPEFACE = "/app/avoviirsprocessor/Cousine-Bold.ttf"
 COAST_DIR = '/usr/local/gshhg'
-AREA_DEF = '/app/avoviirsprocessor/trollconfig/areas.def'
+AREA_DEF = '/app/trollconfig/areas.def'
 
 
 def processor_factory(message):

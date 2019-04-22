@@ -12,5 +12,5 @@ COPY avoviirsprocessor avoviirsprocessor
 RUN python setup.py install
 
 RUN pip freeze > requirements.txt
-
+ENV TLES=/viirs/elements/noaa.txt
 CMD ["watcher"]

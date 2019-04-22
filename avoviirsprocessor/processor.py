@@ -101,7 +101,7 @@ class Processor(object):
         try:
             self.load_data(scn)
         except KeyError:
-            logger.excpetion("missing data, skipping")
+            logger.error("missing data, skipping %s", self.product)
             return
 
         for sector_def in self.find_sectors(scn):

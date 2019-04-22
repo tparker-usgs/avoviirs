@@ -1,4 +1,6 @@
 
+import calendar
+import requests
 import tomputils.util as tutil
 from pyresample import parse_area_file
 from trollsched.satpass import Pass
@@ -15,6 +17,8 @@ PNG_DIR = '/viirs/png'
 TYPEFACE = "/app/avoviirsprocessor/Cousine-Bold.ttf"
 COAST_DIR = '/usr/local/gshhg'
 AREA_DEF = '/app/trollconfig/areas.def'
+PROD_ENDPOINT = "http://volcview.wr.usgs.gov/vv-api"
+DEV_ENDPOINT = "http://dev-volcview.wr.usgs.gov/vv-api"
 
 
 def processor_factory(message):
@@ -30,6 +34,22 @@ def processor_factory(message):
         return VIS(message)
     else:
         raise NotImplementedError("I don't know how to {}".format(product))
+
+
+def publish(sector, band, dataType, time, file):
+    headers = {'username': 'test', 'password': 'test'}
+    files = {'file': (file, open(file, 'rb'))}
+    data = {'sector': sector,
+            'band': band,
+            'dataType': dataType,
+            'imageUnixtime': calendar.timegm(time.timetuple()),
+            }
+
+    url = DEV_ENDPOINT + "/imageApi/uploadImage"
+    print("publishing image to {}".format(url))
+    print("data {}".format(data))
+    response = requests.post(url, headers=headers, data=data, files=files)
+    return response
 
 
 class Processor(object):
@@ -118,6 +138,9 @@ class Processor(object):
 
             print("writing {}".format(filename))
             img.save(filename)
+
+            publish(sector_def.area_id, self.product, 'viirs',
+                    data['start_time'], filename)
 
         logger.debug("All done with this taks.")
 

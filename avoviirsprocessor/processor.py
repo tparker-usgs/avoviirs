@@ -13,7 +13,7 @@ from satpy.enhancements import cira_stretch
 from avoviirsprocessor import logger
 from trollimage import colormap
 import aggdraw
-
+import tomputils.util as tutil
 
 GOLDENROD = (218, 165, 32)
 PNG_DIR = '/viirs/png'
@@ -44,7 +44,9 @@ def processor_factory(message):
 
 
 def publish(sector, product, dataType, time, file):
-    headers = {'username': 'test', 'password': 'test'}
+    user = tutil.get_env_var('VOLCVIEW_USER')
+    passwd = tutil.get_env_var('VOLCVIEW_PASSWD')
+    headers = {'username': user, 'password': passwd}
     files = {'file': (file, open(file, 'rb'))}
     data = {'sector': sector,
             'band': VOLCVIEW_BANDS[product],

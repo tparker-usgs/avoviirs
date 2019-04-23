@@ -138,7 +138,7 @@ class Processor(object):
             local = scn.resample(sector_def)
             pilimg = self.get_enhanced_pilimage(local[self.product].squeeze(),
                                                 sector_def)
-            self.decorate_pilimage(pilimg)
+            self.decorate_pilimg(pilimg)
             time_str = data['start_time'].strftime('%Y%m%d.%H%M')
             filename_str = "{}/testing-{}-{}-{}-viirs-{}-{}.png"
             filename = filename_str.format(PNG_DIR, time_str,

@@ -44,7 +44,7 @@ def publish(sector, product, dataType, time, file):
     headers = {'username': 'test', 'password': 'test'}
     files = {'file': (file, open(file, 'rb'))}
     data = {'sector': sector,
-            'band': VOLCVIEW_BANDS['product'],
+            'band': VOLCVIEW_BANDS[product],
             'dataType': dataType,
             'imageUnixtime': calendar.timegm(time.timetuple()),
             }

@@ -18,13 +18,14 @@ import signal
 import threading
 
 from posttroll.message import Message, MessageError
-import tomputils.util as tutil
 from pyresample import parse_area_file
 from trollsched.satpass import Pass
 from satpy.scene import Scene
 from satpy import find_files_and_readers
 from satpy.writers import load_writer
 from avoviirsprocessor.processor import processor_factory
+from avoviirsprocessor import logger
+
 
 REQUEST_TIMEOUT = 10000
 TASK_SERVER = "tcp://viirscollector:19091"
@@ -126,9 +127,6 @@ def process_message(msg):
 def main():
     # let ctrl-c work as it should.
     signal.signal(signal.SIGINT, signal.SIG_DFL)
-
-    global logger
-    logger = tutil.setup_logging("avoviirsprocessor.watcher errors")
 
     context = zmq.Context()
     logger.debug("starting updater")

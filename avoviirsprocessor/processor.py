@@ -11,6 +11,7 @@ from pydecorate import DecoratorAGG
 from trollimage.colormap import Colormap
 from satpy.dataset import combine_metadata
 from satpy.enhancements import cira_stretch
+from avoviirsprocessor import logger
 
 GOLDENROD = (218, 165, 32)
 PNG_DIR = '/viirs/png'
@@ -56,7 +57,6 @@ class Processor(object):
     def __init__(self, message, product, product_label):
         self.message = message
         self.product_label = product_label
-        self.logger = tutil.setup_logging("avoviirsprocessor.watcher errors")
         self.data = message.data
         self.product = product
 
@@ -83,7 +83,7 @@ class Processor(object):
         sectors = []
         for sector_def in parse_area_file(AREA_DEF):
             coverage = overpass.area_coverage(sector_def)
-            self.logger.debug("{} coverage: {}".format(sector_def.area_id,
+            logger.debug("{} coverage: {}".format(sector_def.area_id,
                                                        coverage))
             if coverage > .1:
                 sectors.append(sector_def)
@@ -113,9 +113,8 @@ class Processor(object):
         return pilimg
 
     def process_message(self):
-        logger = self.logger
         message = self.message
-        self.logger.debug("Processing message: %s", message.encode())
+        logger.debug("Processing message: %s", message.encode())
         data = message.data
         scn = self.create_scene()
         try:

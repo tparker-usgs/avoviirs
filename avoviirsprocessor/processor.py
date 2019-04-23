@@ -53,6 +53,7 @@ def publish(sector, product, dataType, time, file):
     print("publishing image to {}".format(url))
     print("data {}".format(data))
     response = requests.post(url, headers=headers, data=data, files=files)
+    print("server said: {}".format(response.text))
     return response
 
 

@@ -81,6 +81,12 @@ class Processor(object):
     def apply_colorbar(self, dcimg):
         pass
 
+    def apply_colorbar(self, dcimg, colors, tick_marks, minor_tick_marks):
+        dcimg.add_scale(colors, extend=True, tick_marks=tick_marks,
+                        minor_tick_marks=minor_tick_marks,
+                        font=self.color_bar_font, height=20, margins=[1, 1], )
+        dcimg.new_line()
+
     def apply_label(self, dcimg):
         start_string = self.data['start_time'].strftime('%m/%d/%Y %H:%M UTC')
         label = "{} {} VIIRS {}".format(start_string,
@@ -166,13 +172,9 @@ class TIR(Processor):
         img.invert()
 
     def apply_colorbar(self, dcimg):
-        colormap.greys.set_range(-65, 35)
-        tick_marks = 10
-        minor_tick_marks = 5
-        dcimg.add_scale(colormap.greys, extend=True, tick_marks=tick_marks,
-                        minor_tick_marks=minor_tick_marks,
-                        font=self.color_bar_font, height=20, margins=[1, 1], )
-        dcimg.new_line()
+        colors = colormap.greys
+        colors.set_range(-65, 35)
+        super().apply_colorbar(dcimg, colors, 20, 10)
 
     def load_data(self, scn):
         scn.load(['M15'])
@@ -188,13 +190,9 @@ class MIR(Processor):
         img.crude_stretch(223.15, 323.15)  # -50c - 50c
 
     def apply_colorbar(self, dcimg):
-        tick_marks = 20
-        minor_tick_marks = 10
-        colormap.greys.set_range(-50, 50)
-        dcimg.add_scale(colormap.greys, extend=True, tick_marks=tick_marks,
-                        minor_tick_marks=minor_tick_marks,
-                        font=self.color_bar_font, height=20, margins=[1, 1], )
-        dcimg.new_line()
+        colors = colormap.greys
+        colors.set_range(-50, 50)
+        super().apply_colorbar(dcimg, colors, 20, 10)
 
     def load_data(self, scn):
         scn.load(['I04'])
@@ -203,31 +201,25 @@ class MIR(Processor):
 
 class BTD(Processor):
     def __init__(self, message):
-        super().__init__(message, 'btd',
-                         'brightness temperature difference')
-        self.btd_colors = Colormap((0.0, (0.5, 0.0, 0.0)),
-                                   (0.071428, (1.0, 0.0, 0.0)),
-                                   (0.142856, (1.0, 0.5, 0.0)),
-                                   (0.214284, (1.0, 1.0, 0.0)),
-                                   (0.285712, (0.5, 1.0, 0.5)),
-                                   (0.357140, (0.0, 1.0, 1.0)),
-                                   (0.428568, (0.0, 0.5, 1.0)),
-                                   (0.499999, (0.0, 0.0, 1.0)),
-                                   (0.5000, (0.5, 0.5, 0.5)),
-                                   (1.0, (1.0, 1.0, 1.0)))
+        super().__init__(message, 'btd', 'brightness temperature difference')
 
     def enhance_image(self, img):
         img.crude_stretch(-6, 5)
         img.colorize(self.btd_colors)
 
     def apply_colorbar(self, dcimg):
-        self.btd_colors.set_range(-6, 5)
-        tick_marks = 1
-        minor_tick_marks = .5
-        dcimg.add_scale(colormap.greys, extend=True, tick_marks=tick_marks,
-                        minor_tick_marks=minor_tick_marks,
-                        font=self.color_bar_font, height=20, margins=[1, 1], )
-        dcimg.new_line()
+        colors = Colormap((0.0, (0.5, 0.0, 0.0)),
+                          (0.071428, (1.0, 0.0, 0.0)),
+                          (0.142856, (1.0, 0.5, 0.0)),
+                          (0.214284, (1.0, 1.0, 0.0)),
+                          (0.285712, (0.5, 1.0, 0.5)),
+                          (0.357140, (0.0, 1.0, 1.0)),
+                          (0.428568, (0.0, 0.5, 1.0)),
+                          (0.499999, (0.0, 0.0, 1.0)),
+                          (0.5000, (0.5, 0.5, 0.5)),
+                          (1.0, (1.0, 1.0, 1.0)))
+        colors.set_range(-6, 5)
+        super().apply_colorbar(dcimg, colors, 1, .5)
 
     def load_data(self, scn):
         scn.load(['M15', 'M16'])
@@ -237,8 +229,7 @@ class BTD(Processor):
 
 class VIS(Processor):
     def __init__(self, message):
-        super().__init__(message,
-                         'vis', 'true color')
+        super().__init__(message, 'vis', 'true color')
 
     def enhance_image(self, img):
         cira_stretch(img)

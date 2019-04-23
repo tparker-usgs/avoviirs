@@ -124,6 +124,20 @@ def process_message(msg):
     logger.debug("All done with this taks.")
 
 
+def process_message(msg_bytes):
+    try:
+        msg = Message.decode(msg_bytes)
+        processor = processor_factory(msg)
+        processor.process_message()
+    except MessageError as e:
+        logger.error("Message decode error.")
+        logger.exception(e)
+    except NotImplementedError as e:
+        logger.exception(e)
+    logger.debug("Whew, that was hard. Let rest for 10 seconds.")
+    time.sleep(10)
+
+
 def main():
     # let ctrl-c work as it should.
     signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -142,22 +156,10 @@ def main():
             client.send(b"gimme something to do")
             msg_bytes = client.recv()
             if msg_bytes:
-                try:
-                    msg = Message.decode(msg_bytes)
-                    processor = processor_factory(msg)
-                    processor.process_message()
-                except MessageError as e:
-                    logger.error("Message decode error.")
-                    logger.exception(e)
-                except NotImplementedError as e:
-                    logger.exception(e)
-                logger.debug("Whew, that was hard. Let rest for 10 seconds.")
-                time.sleep(10)
+                process_message(msg_bytes)
             else:
-                logger.info("task_waiting, but no message received")
                 time.sleep(1)
         else:
-            logger.debug("No task waiting.")
             time.sleep(1)
 
 

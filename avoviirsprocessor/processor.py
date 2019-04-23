@@ -19,6 +19,10 @@ COAST_DIR = '/usr/local/gshhg'
 AREA_DEF = '/app/trollconfig/areas.def'
 PROD_ENDPOINT = "http://volcview.wr.usgs.gov/vv-api"
 DEV_ENDPOINT = "http://dev-volcview.wr.usgs.gov/vv-api"
+VOLCVIEW_PRODUCTS = {'tir': 'Thermal IR',
+                     'mir': 'Mid-IR',
+                     'btd': 'TIR BTD',
+                     'vis': 'Visible'}
 
 
 def processor_factory(message):
@@ -36,11 +40,11 @@ def processor_factory(message):
         raise NotImplementedError("I don't know how to {}".format(product))
 
 
-def publish(sector, band, dataType, time, file):
+def publish(sector, product, dataType, time, file):
     headers = {'username': 'test', 'password': 'test'}
     files = {'file': (file, open(file, 'rb'))}
     data = {'sector': sector,
-            'band': band,
+            'band': VOLCVIEW_PRODUCTS['product'],
             'dataType': dataType,
             'imageUnixtime': calendar.timegm(time.timetuple()),
             }

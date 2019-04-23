@@ -11,6 +11,9 @@ from trollimage.colormap import Colormap
 from satpy.dataset import combine_metadata
 from satpy.enhancements import cira_stretch
 from avoviirsprocessor import logger
+from trollimage import colormap
+import aggdraw
+
 
 GOLDENROD = (218, 165, 32)
 PNG_DIR = '/viirs/png'
@@ -63,9 +66,29 @@ class Processor(object):
         self.product_label = product_label
         self.data = message.data
         self.product = product
+        self.color_bar_font = aggdraw.Font((0, 0, 0), TYPEFACE, size=14)
 
     def enhance_image(self, img):
         raise NotImplementedError("enhance_image not implemented")
+
+    def decorate_pilimg(self, pilimg):
+        dc = DecoratorAGG(pilimg)
+        dc.align_bottom()
+
+        self.apply_colorbar(dc)
+        self.apply_label(dc)
+
+    def apply_colorbar(self, dcimg):
+        pass
+
+    def apply_label(self, dcimg):
+        start_string = self.data['start_time'].strftime('%m/%d/%Y %H:%M UTC')
+        label = "{} {} VIIRS {}".format(start_string,
+                                        self.data['platform_name'],
+                                        self.product_label)
+        dcimg.add_text(label, font=TYPEFACE, height=30, extend=True,
+                       bg_opacity=128, bg='black', line=GOLDENROD,
+                       font_size=14)
 
     def load_data(self):
         raise NotImplementedError("load_data not implemented")
@@ -93,28 +116,12 @@ class Processor(object):
                 sectors.append(sector_def)
         return sectors
 
-    def apply_label(self, pilimg):
-        dc = DecoratorAGG(pilimg)
-        dc.align_bottom()
-
-        start_string = self.data['start_time'].strftime('%m/%d/%Y %H:%M UTC')
-        label = "{} {} VIIRS {}".format(start_string,
-                                        self.data['platform_name'],
-                                        self.product_label)
-        dc.add_text(label, font=TYPEFACE, height=30, extend=True,
-                    bg_opacity=128, bg='black', line=GOLDENROD,
-                    font_size=14)
-
     def get_enhanced_pilimage(self, dataset, area):
         img = to_image(dataset)
         self.enhance_image(img)
         img = add_overlay(img, area=area, coast_dir=COAST_DIR,
                           color=GOLDENROD, width=1, fill_value=0)
-
-        pilimg = img.pil_image()
-        img = self.apply_label(pilimg)
-
-        return pilimg
+        return img.pil_image()
 
     def process_message(self):
         message = self.message
@@ -129,8 +136,9 @@ class Processor(object):
 
         for sector_def in self.find_sectors(scn):
             local = scn.resample(sector_def)
-            img = self.get_enhanced_pilimage(local[self.product].squeeze(),
-                                             sector_def)
+            pilimg = self.get_enhanced_pilimage(local[self.product].squeeze(),
+                                                sector_def)
+            self.decorate_pilimage(pilimg)
             time_str = data['start_time'].strftime('%Y%m%d.%H%M')
             filename_str = "{}/testing-{}-{}-{}-viirs-{}-{}.png"
             filename = filename_str.format(PNG_DIR, time_str,
@@ -140,7 +148,7 @@ class Processor(object):
                                            self.product)
 
             print("writing {}".format(filename))
-            img.save(filename)
+            pilimg.save(filename)
 
             publish(sector_def.area_id, self.product, 'viirs',
                     data['start_time'], filename)
@@ -157,6 +165,15 @@ class TIR(Processor):
         img.crude_stretch(208.15, 308.15)  # -65c - 35c
         img.invert()
 
+    def apply_colorbar(self, dcimg):
+        colormap.greys.set_range(-65, 35)
+        tick_marks = 10
+        minor_tick_marks = 5
+        dcimg.add_scale(colormap.greys, extend=True, tick_marks=tick_marks,
+                        minor_tick_marks=minor_tick_marks,
+                        font=self.color_bar_font, height=20, margins=[1, 1], )
+        dcimg.new_line()
+
     def load_data(self, scn):
         scn.load(['M15'])
         scn['tir'] = scn['M15']
@@ -170,6 +187,15 @@ class MIR(Processor):
     def enhance_image(self, img):
         img.crude_stretch(223.15, 323.15)  # -50c - 50c
 
+    def apply_colorbar(self, dcimg):
+        tick_marks = 20
+        minor_tick_marks = 10
+        colormap.greys.set_range(-50, 50)
+        dcimg.add_scale(colormap.greys, extend=True, tick_marks=tick_marks,
+                        minor_tick_marks=minor_tick_marks,
+                        font=self.color_bar_font, height=20, margins=[1, 1], )
+        dcimg.new_line()
+
     def load_data(self, scn):
         scn.load(['I04'])
         scn['mir'] = scn['I04']
@@ -179,20 +205,29 @@ class BTD(Processor):
     def __init__(self, message):
         super().__init__(message, 'btd',
                          'brightness temperature difference')
+        self.btd_colors = Colormap((0.0, (0.5, 0.0, 0.0)),
+                                   (0.071428, (1.0, 0.0, 0.0)),
+                                   (0.142856, (1.0, 0.5, 0.0)),
+                                   (0.214284, (1.0, 1.0, 0.0)),
+                                   (0.285712, (0.5, 1.0, 0.5)),
+                                   (0.357140, (0.0, 1.0, 1.0)),
+                                   (0.428568, (0.0, 0.5, 1.0)),
+                                   (0.499999, (0.0, 0.0, 1.0)),
+                                   (0.5000, (0.5, 0.5, 0.5)),
+                                   (1.0, (1.0, 1.0, 1.0)))
 
     def enhance_image(self, img):
         img.crude_stretch(-6, 5)
-        btd_colors = Colormap((0.0, (0.5, 0.0, 0.0)),
-                              (0.071428, (1.0, 0.0, 0.0)),
-                              (0.142856, (1.0, 0.5, 0.0)),
-                              (0.214284, (1.0, 1.0, 0.0)),
-                              (0.285712, (0.5, 1.0, 0.5)),
-                              (0.357140, (0.0, 1.0, 1.0)),
-                              (0.428568, (0.0, 0.5, 1.0)),
-                              (0.499999, (0.0, 0.0, 1.0)),
-                              (0.5000, (0.5, 0.5, 0.5)),
-                              (1.0, (1.0, 1.0, 1.0)))
-        img.colorize(btd_colors)
+        img.colorize(self.btd_colors)
+
+    def apply_colorbar(self, dcimg):
+        self.btd_colors.set_range(-6, 5)
+        tick_marks = 1
+        minor_tick_marks = .5
+        dcimg.add_scale(colormap.greys, extend=True, tick_marks=tick_marks,
+                        minor_tick_marks=minor_tick_marks,
+                        font=self.color_bar_font, height=20, margins=[1, 1], )
+        dcimg.new_line()
 
     def load_data(self, scn):
         scn.load(['M15', 'M16'])

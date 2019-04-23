@@ -19,10 +19,10 @@ COAST_DIR = '/usr/local/gshhg'
 AREA_DEF = '/app/trollconfig/areas.def'
 PROD_ENDPOINT = "http://volcview.wr.usgs.gov/vv-api"
 DEV_ENDPOINT = "http://dev-volcview.wr.usgs.gov/vv-api"
-VOLCVIEW_PRODUCTS = {'tir': 'Thermal IR',
-                     'mir': 'Mid-IR',
-                     'btd': 'TIR BTD',
-                     'vis': 'Visible'}
+VOLCVIEW_BANDS = {'tir': 'Thermal IR',
+                  'mir': 'Mid-IR',
+                  'btd': 'TIR BTD',
+                  'vis': 'Visible'}
 
 
 def processor_factory(message):
@@ -44,7 +44,7 @@ def publish(sector, product, dataType, time, file):
     headers = {'username': 'test', 'password': 'test'}
     files = {'file': (file, open(file, 'rb'))}
     data = {'sector': sector,
-            'band': VOLCVIEW_PRODUCTS['product'],
+            'band': VOLCVIEW_BANDS['product'],
             'dataType': dataType,
             'imageUnixtime': calendar.timegm(time.timetuple()),
             }

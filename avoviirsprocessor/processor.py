@@ -1,7 +1,6 @@
 
 import calendar
 import requests
-import tomputils.util as tutil
 from pyresample import parse_area_file
 from trollsched.satpass import Pass
 from satpy.scene import Scene
@@ -84,7 +83,7 @@ class Processor(object):
         for sector_def in parse_area_file(AREA_DEF):
             coverage = overpass.area_coverage(sector_def)
             logger.debug("{} coverage: {}".format(sector_def.area_id,
-                                                       coverage))
+                                                  coverage))
             if coverage > .1:
                 sectors.append(sector_def)
         return sectors

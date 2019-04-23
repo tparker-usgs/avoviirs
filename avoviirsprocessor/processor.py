@@ -204,24 +204,24 @@ class MIR(Processor):
 class BTD(Processor):
     def __init__(self, message):
         super().__init__(message, 'btd', 'brightness temperature difference')
+        self.colors = Colormap((0.0, (0.5, 0.0, 0.0)),
+                                (0.071428, (1.0, 0.0, 0.0)),
+                                (0.142856, (1.0, 0.5, 0.0)),
+                                (0.214284, (1.0, 1.0, 0.0)),
+                                (0.285712, (0.5, 1.0, 0.5)),
+                                (0.357140, (0.0, 1.0, 1.0)),
+                                (0.428568, (0.0, 0.5, 1.0)),
+                                (0.499999, (0.0, 0.0, 1.0)),
+                                (0.5000, (0.5, 0.5, 0.5)),
+                                (1.0, (1.0, 1.0, 1.0)))
+        self.colors.set_range(-6, 5)
 
     def enhance_image(self, img):
         img.crude_stretch(-6, 5)
-        img.colorize(self.btd_colors)
+        img.colorize(self.colors)
 
     def apply_colorbar(self, dcimg):
-        colors = Colormap((0.0, (0.5, 0.0, 0.0)),
-                          (0.071428, (1.0, 0.0, 0.0)),
-                          (0.142856, (1.0, 0.5, 0.0)),
-                          (0.214284, (1.0, 1.0, 0.0)),
-                          (0.285712, (0.5, 1.0, 0.5)),
-                          (0.357140, (0.0, 1.0, 1.0)),
-                          (0.428568, (0.0, 0.5, 1.0)),
-                          (0.499999, (0.0, 0.0, 1.0)),
-                          (0.5000, (0.5, 0.5, 0.5)),
-                          (1.0, (1.0, 1.0, 1.0)))
-        colors.set_range(-6, 5)
-        super().draw_colorbar(dcimg, colors, 1, .5)
+        super().draw_colorbar(dcimg, self.colors, 1, .5)
 
     def load_data(self, scn):
         scn.load(['M15', 'M16'])

@@ -124,7 +124,7 @@ def process_message(msg):
     logger.debug("All done with this taks.")
 
 
-def process_message(msg_bytes):
+def receive_message(msg_bytes):
     try:
         msg = Message.decode(msg_bytes)
         processor = processor_factory(msg)
@@ -156,7 +156,7 @@ def main():
             client.send(b"gimme something to do")
             msg_bytes = client.recv()
             if msg_bytes:
-                process_message(msg_bytes)
+                receive_message(msg_bytes)
             else:
                 time.sleep(1)
         else:

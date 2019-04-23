@@ -81,7 +81,7 @@ class Processor(object):
     def apply_colorbar(self, dcimg):
         pass
 
-    def apply_colorbar(self, dcimg, colors, tick_marks, minor_tick_marks):
+    def draw_colorbar(self, dcimg, colors, tick_marks, minor_tick_marks):
         dcimg.add_scale(colors, extend=True, tick_marks=tick_marks,
                         minor_tick_marks=minor_tick_marks,
                         font=self.color_bar_font, height=20, margins=[1, 1], )
@@ -174,7 +174,7 @@ class TIR(Processor):
     def apply_colorbar(self, dcimg):
         colors = colormap.greys
         colors.set_range(-65, 35)
-        super().apply_colorbar(dcimg, colors, 20, 10)
+        super().draw_colorbar(dcimg, colors, 20, 10)
 
     def load_data(self, scn):
         scn.load(['M15'])
@@ -192,7 +192,7 @@ class MIR(Processor):
     def apply_colorbar(self, dcimg):
         colors = colormap.greys
         colors.set_range(-50, 50)
-        super().apply_colorbar(dcimg, colors, 20, 10)
+        super().draw_colorbar(dcimg, colors, 20, 10)
 
     def load_data(self, scn):
         scn.load(['I04'])
@@ -219,7 +219,7 @@ class BTD(Processor):
                           (0.5000, (0.5, 0.5, 0.5)),
                           (1.0, (1.0, 1.0, 1.0)))
         colors.set_range(-6, 5)
-        super().apply_colorbar(dcimg, colors, 1, .5)
+        super().draw_colorbar(dcimg, colors, 1, .5)
 
     def load_data(self, scn):
         scn.load(['M15', 'M16'])

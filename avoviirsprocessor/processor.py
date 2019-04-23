@@ -132,10 +132,10 @@ class Processor(object):
             img = self.get_enhanced_pilimage(local[self.product].squeeze(),
                                              sector_def)
             time_str = data['start_time'].strftime('%Y%m%d.%H%M')
-            filename_str = "{}/{}.{}.{}.--.{}.{}.png"
+            filename_str = "{}/testing-{}-{}-{}-viirs-{}-{}.png"
             filename = filename_str.format(PNG_DIR, time_str,
+                                           data['platform_name'],
                                            data['orbit_number'],
-                                           data['sensor'][0],
                                            sector_def.area_id,
                                            self.product)
 

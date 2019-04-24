@@ -244,5 +244,5 @@ class VIS(Processor):
         cira_stretch(img)
 
     def load_data(self, scn):
-        scn.load(['true_color'])
+        scn.load(['I01', 'M03', 'M04', 'M05'])
         scn['vis'] = scn['true_color']

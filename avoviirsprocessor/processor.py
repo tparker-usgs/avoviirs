@@ -116,6 +116,7 @@ class Processor(object):
             raise e
         
         return scene
+
     def find_sectors(self, scene):
         data = self.message.data
         overpass = Pass(data['platform_name'], scene.start_time,
@@ -132,8 +133,8 @@ class Processor(object):
     def get_enhanced_pilimage(self, dataset, area):
         img = to_image(dataset)
         self.enhance_image(img)
-        img = add_overlay(img, area=area, coast_dir=COAST_DIR,
-                          color=GOLDENROD, width=1, fill_value=0)
+        img = add_overlay(img, area=area, coast_dir=COAST_DIR, color=GOLDENROD,
+                          fill_value=0)
         return img.pil_image()
 
     def process_message(self):

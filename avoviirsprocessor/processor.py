@@ -68,7 +68,7 @@ class Processor(object):
         self.product_label = product_label
         self.data = message.data
         self.product = product
-        self.color_bar_font = aggdraw.Font((0, 0, 0), TYPEFACE, size=14)
+        self.color_bar_font = aggdraw.Font(GOLDENROD, TYPEFACE, size=14)
 
     def enhance_image(self, img):
         raise NotImplementedError("enhance_image not implemented")
@@ -179,8 +179,8 @@ class TIR(Processor):
         super().draw_colorbar(dcimg, colors, 20, 10)
 
     def load_data(self, scn):
-        scn.load(['M15'])
-        scn['tir'] = scn['M15']
+        scn.load(['I05'])
+        scn['tir'] = scn['I05']
 
 
 class MIR(Processor):

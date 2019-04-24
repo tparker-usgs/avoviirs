@@ -109,8 +109,13 @@ class Processor(object):
         filenames = find_files_and_readers(base_dir='/viirs/sdr',
                                            reader='viirs_sdr',
                                            filter_parameters=filter_parameters)
-        return Scene(filenames=filenames, reader='viirs_sdr')
-
+        try:
+            scene = Scene(filenames=filenames, reader='viirs_sdr')
+        except ValueError as e:
+            logger.exception("Loading files didn't go well: %s", filenames)
+            raise e
+        
+        return scene
     def find_sectors(self, scene):
         data = self.message.data
         overpass = Pass(data['platform_name'], scene.start_time,

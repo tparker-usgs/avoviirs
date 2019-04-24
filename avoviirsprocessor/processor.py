@@ -187,14 +187,15 @@ class MIR(Processor):
     def __init__(self, message):
         super().__init__(message, 'mir',
                          'mid-infrared brightness temperature (c)')
+        self.colors = Colormap((0.0, (0.0, 0.0, 0.0)),
+                               (1.0, (1.0, 1.0, 1.0)))
+        self.colors.set_range(-50, 50)
 
     def enhance_image(self, img):
         img.crude_stretch(223.15, 323.15)  # -50c - 50c
 
     def apply_colorbar(self, dcimg):
-        colors = colormap.greys
-        colors.set_range(-50, 50)
-        super().draw_colorbar(dcimg, colors, 20, 10)
+        super().draw_colorbar(dcimg, self.colors, 20, 10)
 
     def load_data(self, scn):
         scn.load(['I04'])

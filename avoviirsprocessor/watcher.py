@@ -97,7 +97,7 @@ def process_message(msg):
         start_string = data['start_time'].strftime('%m/%d/%Y %H:%M UTC')
         label = "{} {} VIIRS thermal infrared brightness temperature(C)"
         label = label.format(start_string, data['platform_name'],
-                             data['sensor'], IMAGE_LABEL[product])
+                             data['sensor'], IMAGE_LABEL[product
 
         text = {'text': {'txt': label,
                          'align': {'top_bottom': 'bottom',

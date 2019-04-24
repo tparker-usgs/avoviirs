@@ -86,7 +86,7 @@ class Processor(object):
     def draw_colorbar(self, dcimg, colors, tick_marks, minor_tick_marks):
         dcimg.add_scale(colors, extend=True, tick_marks=tick_marks,
                         minor_tick_marks=minor_tick_marks,
-                        font=self.color_bar_font, height=20, margins=[1, 1], )
+                        font=self.color_bar_font, height=20, margins=[1, 1])
         dcimg.new_line()
 
     def apply_label(self, dcimg):
@@ -114,7 +114,7 @@ class Processor(object):
         except ValueError as e:
             logger.exception("Loading files didn't go well: %s", filenames)
             raise e
-        
+
         return scene
     def find_sectors(self, scene):
         data = self.message.data

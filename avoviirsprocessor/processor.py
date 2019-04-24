@@ -210,6 +210,7 @@ class MIR(Processor):
 class BTD(Processor):
     def __init__(self, message):
         super().__init__(message, 'btd', 'brightness temperature difference')
+        self.color_bar_font = aggdraw.Font((0, 0, 0), TYPEFACE, size=14)
         self.colors = Colormap((0.0, (0.5, 0.0, 0.0)),
                                (0.071428, (1.0, 0.0, 0.0)),
                                (0.142856, (1.0, 0.5, 0.0)),

@@ -23,7 +23,7 @@ from trollsched.satpass import Pass
 from satpy.scene import Scene
 from satpy import find_files_and_readers
 from satpy.writers import load_writer
-from avoviirsprocessor.processor import processor_factory
+from avoviirsprocessor.processor import processor_factory, VOLCVIEW_BANDS
 from avoviirsprocessor import logger
 
 
@@ -153,7 +153,8 @@ def main():
 
     while True:
         if updater.task_waiting:
-            client.send(b"gimme something to do")
+            request = {'desired products': VOLCVIEW_BANDS.keys()}
+            client.send_json(request)
             msg_bytes = client.recv()
             if msg_bytes:
                 receive_message(msg_bytes)

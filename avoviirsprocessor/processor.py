@@ -114,7 +114,7 @@ class Processor(object):
         except ValueError as e:
             logger.exception("Loading files didn't go well: %s", filenames)
             raise e
-        
+
         return scene
 
     def find_sectors(self, scene):

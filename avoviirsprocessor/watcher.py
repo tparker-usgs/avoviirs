@@ -153,7 +153,7 @@ def main():
 
     while True:
         if updater.task_waiting:
-            request = {'desired products': VOLCVIEW_BANDS.keys()}
+            request = {'desired products': list(VOLCVIEW_BANDS.keys())}
             client.send_json(request)
             msg_bytes = client.recv()
             if msg_bytes:

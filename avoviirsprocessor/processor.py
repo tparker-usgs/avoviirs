@@ -143,7 +143,7 @@ class Processor(object):
         data = message.data
         scn = self.create_scene()
         try:
-            self.load_data(scn)
+            scn = self.load_data(scn)
         except KeyError:
             logger.exception("missing data, skipping %s", self.product)
             return
@@ -186,6 +186,7 @@ class TIR(Processor):
     def load_data(self, scn):
         scn.load(['I05'])
         scn['tir'] = scn['I05']
+        return scn
 
 
 class MIR(Processor):
@@ -205,6 +206,7 @@ class MIR(Processor):
     def load_data(self, scn):
         scn.load(['I04'])
         scn['mir'] = scn['I04']
+        return scn
 
 
 class BTD(Processor):
@@ -233,6 +235,7 @@ class BTD(Processor):
         scn.load(['M15', 'M16'])
         scn['btd'] = scn['M15'] - scn['M16']
         scn['btd'].attrs = combine_metadata(scn['M15'], scn['M16'])
+        return scn
 
 
 class VIS(Processor):
@@ -243,7 +246,7 @@ class VIS(Processor):
         cira_stretch(img)
 
     def load_data(self, scn):
-        # scn.load(['I01', 'M03', 'M04', 'M05'])
         scn.load(['true_color'])
         scn = scn.resample(resampler='native')
         scn['vis'] = scn['true_color']
+        return scn

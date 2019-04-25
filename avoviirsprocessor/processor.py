@@ -86,7 +86,7 @@ class Processor(object):
     def draw_colorbar(self, dcimg, colors, tick_marks, minor_tick_marks):
         dcimg.add_scale(colors, extend=True, tick_marks=tick_marks,
                         minor_tick_marks=minor_tick_marks,
-                        font=self.color_bar_font, height=20, margins=[1, 1], )
+                        font=self.color_bar_font, height=20, margins=[1, 1])
         dcimg.new_line()
 
     def apply_label(self, dcimg):
@@ -176,7 +176,6 @@ class TIR(Processor):
                          'thermal infrared brightness tempeerature (c)')
 
     def enhance_image(self, img):
-        img.crude_stretch(208.15, 308.15)  # -65c - 35c
         img.invert()
 
     def apply_colorbar(self, dcimg):
@@ -198,7 +197,7 @@ class MIR(Processor):
         self.colors.set_range(-50, 50)
 
     def enhance_image(self, img):
-        img.crude_stretch(223.15, 323.15)  # -50c - 50c
+        pass
 
     def apply_colorbar(self, dcimg):
         super().draw_colorbar(dcimg, self.colors, 20, 10)
@@ -225,7 +224,6 @@ class BTD(Processor):
         self.colors.set_range(-6, 5)
 
     def enhance_image(self, img):
-        # img.crude_stretch(-6, 5)
         img.colorize(self.colors)
 
     def apply_colorbar(self, dcimg):

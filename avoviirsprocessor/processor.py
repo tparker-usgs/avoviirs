@@ -247,4 +247,3 @@ class VIS(Processor):
         scn.load(['true_color'])
         scn = scn.resample(resampler='native')
         scn['vis'] = scn['true_color']
-

@@ -18,11 +18,6 @@ import signal
 import threading
 
 from posttroll.message import Message, MessageError
-from pyresample import parse_area_file
-from trollsched.satpass import Pass
-from satpy.scene import Scene
-from satpy import find_files_and_readers
-from satpy.writers import load_writer
 from avoviirsprocessor.processor import processor_factory, VOLCVIEW_BANDS
 from avoviirsprocessor import logger
 

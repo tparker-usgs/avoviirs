@@ -116,6 +116,7 @@ class Processor(object):
             raise e
 
         return scene
+
     def find_sectors(self, scene):
         data = self.message.data
         overpass = Pass(data['platform_name'], scene.start_time,
@@ -132,8 +133,8 @@ class Processor(object):
     def get_enhanced_pilimage(self, dataset, area):
         img = to_image(dataset)
         self.enhance_image(img)
-        img = add_overlay(img, area=area, coast_dir=COAST_DIR,
-                          color=GOLDENROD, width=1, fill_value=0)
+        img = add_overlay(img, area=area, coast_dir=COAST_DIR, color=GOLDENROD,
+                          fill_value=0)
         return img.pil_image()
 
     def process_message(self):
@@ -210,6 +211,7 @@ class MIR(Processor):
 class BTD(Processor):
     def __init__(self, message):
         super().__init__(message, 'btd', 'brightness temperature difference')
+        self.color_bar_font = aggdraw.Font((0, 0, 0), TYPEFACE, size=14)
         self.colors = Colormap((0.0, (0.5, 0.0, 0.0)),
                                (0.071428, (1.0, 0.0, 0.0)),
                                (0.142856, (1.0, 0.5, 0.0)),
@@ -223,7 +225,7 @@ class BTD(Processor):
         self.colors.set_range(-6, 5)
 
     def enhance_image(self, img):
-        img.crude_stretch(-6, 5)
+        # img.crude_stretch(-6, 5)
         img.colorize(self.colors)
 
     def apply_colorbar(self, dcimg):
@@ -243,5 +245,5 @@ class VIS(Processor):
         cira_stretch(img)
 
     def load_data(self, scn):
-        scn.load(['true_color'])
+        scn.load(['I01', 'M03', 'M04', 'M05'])
         scn['vis'] = scn['true_color']

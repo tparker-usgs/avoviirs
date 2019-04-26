@@ -1,7 +1,8 @@
 """
 Create and deliver a volcview product.
 
-This module provides utility functions and an abstract base class for creating images for volcview.
+This module provides utility functions and an abstract base class for
+creating images for volcview.
 
 """
 
@@ -111,7 +112,7 @@ class Processor(ABC):
 
     @abstractmethod
     def load_data(self, scn):
-        """Load data into a scene 
+        """Load data into a scene
 
         Parameters
         ----------

@@ -286,6 +286,6 @@ class Processor(ABC):
                 msg_file.write(message.encode())
 
             publish(sector_def.area_id, self.volcview_band, data['start_time'],
-                    filename)
+                    image_filename)
 
         logger.debug("All done with this task.")

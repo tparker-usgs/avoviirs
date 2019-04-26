@@ -22,14 +22,11 @@ from abc import ABC, abstractmethod
 GOLDENROD = (218, 165, 32)
 PNG_DIR = '/viirs/png'
 TYPEFACE = "/app/avoviirsprocessor/Cousine-Bold.ttf"
+FONT_SIZE = 14
 COAST_DIR = '/usr/local/gshhg'
 AREA_DEF = '/app/trollconfig/areas.def'
 PROD_ENDPOINT = "http://volcview.wr.usgs.gov/vv-api"
 DEV_ENDPOINT = "http://dev-volcview.wr.usgs.gov/vv-api"
-VOLCVIEW_BANDS = {'tir': 'Thermal IR',
-                  'mir': 'Mid-IR',
-                  'btd': 'TIR BTD',
-                  'vis': 'Visible'}
 
 
 def processor_factory(message):
@@ -56,14 +53,14 @@ def processor_factory(message):
     raise NotImplementedError("I don't know how to {}".format(product))
 
 
-def publish(sector, product, time, file):
+def publish(sector, band, time, file):
     """Deliver a product to volcview.
 
     Parameters
     ----------
     sector : string
         volcview sector name
-    product : string
+    band : string
         volcview band
     time : datetime
         time as displayed in volcview, typically time of earliest sample.
@@ -75,7 +72,7 @@ def publish(sector, product, time, file):
     headers = {'username': user, 'password': passwd}
     files = {'file': (file, open(file, 'rb'))}
     data = {'sector': sector,
-            'band': VOLCVIEW_BANDS[product],
+            'band': band,
             'dataType': 'viirs',
             'imageUnixtime': calendar.timegm(time.timetuple()),
             }
@@ -103,12 +100,13 @@ class Processor(ABC):
        The product-specific portion of the labled shown on the volcview
        image.
     """
-    def __init__(self, message, product, product_label):
+    def __init__(self, message, product, product_label, volcview_band):
         self.message = message
         self.product = product
         self.product_label = product_label
+        self.volcview_band = volcview_band
         self.data = message.data
-        self.color_bar_font = aggdraw.Font(GOLDENROD, TYPEFACE, size=14)
+        self.color_bar_font = aggdraw.Font(GOLDENROD, TYPEFACE, size=FONT_SIZE)
 
     @abstractmethod
     def load_data(self, scn):
@@ -287,7 +285,7 @@ class Processor(ABC):
             with open(message_filename, "w") as msg_file:
                 msg_file.write(message.encode())
 
-            publish(sector_def.area_id, self.product, data['start_time'],
+            publish(sector_def.area_id, self.volcview_band, data['start_time'],
                     filename)
 
         logger.debug("All done with this task.")

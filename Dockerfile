@@ -10,7 +10,7 @@ COPY setup.py .
 COPY setup.cfg .
 COPY avoviirsprocessor avoviirsprocessor
 RUN python setup.py install
-
+COPY watcher.py .
 RUN pip freeze > requirements.txt
 ENV TLES=/viirs/elements/noaa.txt
-CMD ["watcher"]
+CMD ["/app/watcher.py"]

@@ -26,11 +26,4 @@ setup(
     install_requires=[
         'tomputils>=1.12.16',
     ],
-    setup_requires=['pytest-runner'],
-    tests_require=['pytest'],
-    entry_points={
-        'console_scripts': [
-            'watcher = avoviirsprocessor.watcher:main'
-        ]
-    }
 )

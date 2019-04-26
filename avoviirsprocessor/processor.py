@@ -29,22 +29,20 @@ VOLCVIEW_BANDS = {'tir': 'Thermal IR',
 def processor_factory(message):
     product = message.subject.split("/")[-1]
     for processor in Processor.__subclasses__():
-        if processor.product() == product:
+        if processor.Product == product:
             return processor(message)
-        else:
-            print("no match {} == {}".format(processor.product(), product))
     print("found {}".format(len(Processor.__subclasses__())))
     raise NotImplementedError("I don't know how to {}".format(product))
 
 
-def publish(sector, product, dataType, time, file):
+def publish(sector, product, time, file):
     user = tutil.get_env_var('VOLCVIEW_USER')
     passwd = tutil.get_env_var('VOLCVIEW_PASSWD')
     headers = {'username': user, 'password': passwd}
     files = {'file': (file, open(file, 'rb'))}
     data = {'sector': sector,
             'band': VOLCVIEW_BANDS[product],
-            'dataType': dataType,
+            'dataType': 'viirs',
             'imageUnixtime': calendar.timegm(time.timetuple()),
             }
 
@@ -59,18 +57,19 @@ def publish(sector, product, dataType, time, file):
 class Processor(ABC):
     def __init__(self, message, product, product_label):
         self.message = message
+        self.product = product
         self.product_label = product_label
         self.data = message.data
-        self.product = product
         self.color_bar_font = aggdraw.Font(GOLDENROD, TYPEFACE, size=14)
 
     @abstractmethod
-    def enhance_image(self, img):
+    def load_data(self):
         pass
 
-    @staticmethod
-    @abstractmethod
-    def product():
+    def apply_colorbar(self, dcimg):
+        pass
+
+    def enhance_image(self, img):
         pass
 
     def decorate_pilimg(self, pilimg):
@@ -79,9 +78,6 @@ class Processor(ABC):
 
         self.apply_colorbar(dc)
         self.apply_label(dc)
-
-    def apply_colorbar(self, dcimg):
-        pass
 
     def draw_colorbar(self, dcimg, colors, tick_marks, minor_tick_marks):
         dcimg.add_scale(colors, extend=True, tick_marks=tick_marks,
@@ -97,10 +93,6 @@ class Processor(ABC):
         dcimg.add_text(label, font=TYPEFACE, height=30, extend=True,
                        bg_opacity=128, bg='black', line=GOLDENROD,
                        font_size=14)
-
-    @abstractmethod
-    def load_data(self):
-        pass
 
     def create_scene(self):
         data = self.message.data
@@ -165,7 +157,7 @@ class Processor(ABC):
             print("writing {}".format(filename))
             pilimg.save(filename)
 
-            publish(sector_def.area_id, self.product, 'viirs',
-                    data['start_time'], filename)
+            publish(sector_def.area_id, self.product, data['start_time'],
+                    filename)
 
-        logger.debug("All done with this taks.")
+        logger.debug("All done with this task.")

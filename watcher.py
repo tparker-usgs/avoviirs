@@ -52,6 +52,8 @@ def process_message(msg_bytes):
         logger.exception("Message decode error.")
     except NotImplementedError:
         logger.exception("Crap. I accepted a message I can't process.")
+    except ValueError:
+        logger.exception()
     logger.debug("Whew, that was hard. Let rest for 10 seconds.")
     time.sleep(10)
 

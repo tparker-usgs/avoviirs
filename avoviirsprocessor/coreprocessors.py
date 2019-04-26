@@ -6,16 +6,14 @@ from satpy.enhancements import cira_stretch
 
 
 class TIR(Processor):
+    Product = 'tir'
+
     def __init__(self, message):
-        super().__init__(message, 'tir',
+        super().__init__(message, TIR.Product,
                          'thermal infrared brightness tempeerature (c)')
 
     def enhance_image(self, img):
         img.invert()
-
-    @staticmethod
-    def product():
-        return "tir"
 
     def apply_colorbar(self, dcimg):
         colors = colormap.greys
@@ -29,22 +27,17 @@ class TIR(Processor):
 
 
 class MIR(Processor):
+    Product = 'mir'
+
     def __init__(self, message):
-        super().__init__(message, 'mir',
+        super().__init__(message, MIR.Product,
                          'mid-infrared brightness temperature (c)')
         self.colors = colormap.Colormap((0.0, (0.0, 0.0, 0.0)),
                                         (1.0, (1.0, 1.0, 1.0)))
         self.colors.set_range(-50, 50)
 
-    def enhance_image(self, img):
-        pass
-
     def apply_colorbar(self, dcimg):
         super().draw_colorbar(dcimg, self.colors, 20, 10)
-
-    @staticmethod
-    def product():
-        return "mir"
 
     def load_data(self, scn):
         scn.load(['I04'])
@@ -53,8 +46,11 @@ class MIR(Processor):
 
 
 class BTD(Processor):
+    Product = 'btd'
+
     def __init__(self, message):
-        super().__init__(message, 'btd', 'brightness temperature difference')
+        super().__init__(message, BTD.Product,
+                         'brightness temperature difference')
         self.color_bar_font = aggdraw.Font((0, 0, 0), TYPEFACE, size=14)
         self.colors = colormap.Colormap((0.0, (0.5, 0.0, 0.0)),
                                         (0.071428, (1.0, 0.0, 0.0)),
@@ -67,10 +63,6 @@ class BTD(Processor):
                                         (0.5000, (0.5, 0.5, 0.5)),
                                         (1.0, (1.0, 1.0, 1.0)))
         self.colors.set_range(-6, 5)
-
-    @staticmethod
-    def product():
-        return "btd"
 
     def enhance_image(self, img):
         img.colorize(self.colors)
@@ -86,12 +78,10 @@ class BTD(Processor):
 
 
 class VIS(Processor):
-    def __init__(self, message):
-        super().__init__(message, 'vis', 'true color')
+    Product = 'vis'
 
-    @staticmethod
-    def product():
-        return "vis"
+    def __init__(self, message):
+        super().__init__(message, VIS.Product, 'true color')
 
     def enhance_image(self, img):
         cira_stretch(img)

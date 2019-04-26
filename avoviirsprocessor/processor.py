@@ -7,13 +7,11 @@ from satpy.scene import Scene
 from satpy import find_files_and_readers
 from satpy.writers import to_image, add_overlay
 from pydecorate import DecoratorAGG
-from trollimage.colormap import Colormap
-from satpy.dataset import combine_metadata
-from satpy.enhancements import cira_stretch
 from avoviirsprocessor import logger
-from trollimage import colormap
 import aggdraw
 import tomputils.util as tutil
+from abc import ABC, abstractmethod
+
 
 GOLDENROD = (218, 165, 32)
 PNG_DIR = '/viirs/png'
@@ -30,17 +28,10 @@ VOLCVIEW_BANDS = {'tir': 'Thermal IR',
 
 def processor_factory(message):
     product = message.subject.split("/")[-1]
-
-    if product == 'tir':
-        return TIR(message)
-    elif product == 'mir':
-        return MIR(message)
-    elif product == 'btd':
-        return BTD(message)
-    elif product == 'vis':
-        return VIS(message)
-    else:
-        raise NotImplementedError("I don't know how to {}".format(product))
+    for processor in Processor.__subclasses__():
+        if processor.product() == product:
+            return product(message)
+    raise NotImplementedError("I don't know how to {}".format(product))
 
 
 def publish(sector, product, dataType, time, file):
@@ -62,7 +53,7 @@ def publish(sector, product, dataType, time, file):
     return response
 
 
-class Processor(object):
+class Processor(ABC):
     def __init__(self, message, product, product_label):
         self.message = message
         self.product_label = product_label
@@ -70,8 +61,14 @@ class Processor(object):
         self.product = product
         self.color_bar_font = aggdraw.Font(GOLDENROD, TYPEFACE, size=14)
 
+    @abstractmethod
     def enhance_image(self, img):
-        raise NotImplementedError("enhance_image not implemented")
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def product():
+        pass
 
     def decorate_pilimg(self, pilimg):
         dc = DecoratorAGG(pilimg)
@@ -98,8 +95,9 @@ class Processor(object):
                        bg_opacity=128, bg='black', line=GOLDENROD,
                        font_size=14)
 
+    @abstractmethod
     def load_data(self):
-        raise NotImplementedError("load_data not implemented")
+        pass
 
     def create_scene(self):
         data = self.message.data
@@ -168,86 +166,3 @@ class Processor(object):
                     data['start_time'], filename)
 
         logger.debug("All done with this taks.")
-
-
-class TIR(Processor):
-    def __init__(self, message):
-        super().__init__(message, 'tir',
-                         'thermal infrared brightness tempeerature (c)')
-
-    def enhance_image(self, img):
-        img.invert()
-
-    def apply_colorbar(self, dcimg):
-        colors = colormap.greys
-        colors.set_range(-65, 35)
-        super().draw_colorbar(dcimg, colors, 20, 10)
-
-    def load_data(self, scn):
-        scn.load(['I05'])
-        scn['tir'] = scn['I05']
-        return scn
-
-
-class MIR(Processor):
-    def __init__(self, message):
-        super().__init__(message, 'mir',
-                         'mid-infrared brightness temperature (c)')
-        self.colors = Colormap((0.0, (0.0, 0.0, 0.0)),
-                               (1.0, (1.0, 1.0, 1.0)))
-        self.colors.set_range(-50, 50)
-
-    def enhance_image(self, img):
-        pass
-
-    def apply_colorbar(self, dcimg):
-        super().draw_colorbar(dcimg, self.colors, 20, 10)
-
-    def load_data(self, scn):
-        scn.load(['I04'])
-        scn['mir'] = scn['I04']
-        return scn
-
-
-class BTD(Processor):
-    def __init__(self, message):
-        super().__init__(message, 'btd', 'brightness temperature difference')
-        self.color_bar_font = aggdraw.Font((0, 0, 0), TYPEFACE, size=14)
-        self.colors = Colormap((0.0, (0.5, 0.0, 0.0)),
-                               (0.071428, (1.0, 0.0, 0.0)),
-                               (0.142856, (1.0, 0.5, 0.0)),
-                               (0.214284, (1.0, 1.0, 0.0)),
-                               (0.285712, (0.5, 1.0, 0.5)),
-                               (0.357140, (0.0, 1.0, 1.0)),
-                               (0.428568, (0.0, 0.5, 1.0)),
-                               (0.499999, (0.0, 0.0, 1.0)),
-                               (0.5000, (0.5, 0.5, 0.5)),
-                               (1.0, (1.0, 1.0, 1.0)))
-        self.colors.set_range(-6, 5)
-
-    def enhance_image(self, img):
-        img.colorize(self.colors)
-
-    def apply_colorbar(self, dcimg):
-        super().draw_colorbar(dcimg, self.colors, 1, .5)
-
-    def load_data(self, scn):
-        scn.load(['M15', 'M16'])
-        scn['btd'] = scn['M15'] - scn['M16']
-        scn['btd'].attrs = combine_metadata(scn['M15'], scn['M16'])
-        return scn
-
-
-class VIS(Processor):
-    def __init__(self, message):
-        super().__init__(message, 'vis', 'true color')
-
-    def enhance_image(self, img):
-        cira_stretch(img)
-
-    def load_data(self, scn):
-        scn.load(['true_color'])
-        scn = scn.resample(resampler='native')
-        scn['vis'] = scn['true_color']
-        return scn
-    

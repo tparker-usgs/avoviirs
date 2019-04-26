@@ -18,9 +18,9 @@ import signal
 import threading
 
 from posttroll.message import Message, MessageError
-from avoviirsprocessor.processor import processor_factory, VOLCVIEW_BANDS
+from avoviirsprocessor.processor import processor_factory
 from avoviirsprocessor import logger
-from avoviirsprocessor.coreprocessors import TIR, MIR, BTD, VIS
+from avoviirsprocessor.coreprocessors import TIR, MIR, BTD, VIS # NOQA
 import tomputils.util as tutil
 
 

@@ -30,7 +30,10 @@ def processor_factory(message):
     product = message.subject.split("/")[-1]
     for processor in Processor.__subclasses__():
         if processor.product() == product:
-            return product(message)
+            return processor(message)
+        else:
+            print("no match {} == {}".format(processor.product(), product))
+    print("found {}".format(len(Processor.__subclasses__())))
     raise NotImplementedError("I don't know how to {}".format(product))
 
 

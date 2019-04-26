@@ -20,6 +20,7 @@ import threading
 from posttroll.message import Message, MessageError
 from avoviirsprocessor.processor import processor_factory, VOLCVIEW_BANDS
 from avoviirsprocessor import logger
+from avoviirsprocessor.coreprocessors import TIR, MIR, BTD, VIS
 
 
 REQUEST_TIMEOUT = 10000
@@ -51,7 +52,7 @@ def process_message(msg_bytes):
         logger.exception(e)
     except NotImplementedError as e:
         logger.exception(e)
-    logger.debug("Whew, that was hard. Let rest for 10 seconds.")
+    logger.debug("Whew, that was hard. Let rest for 9 seconds.")
     time.sleep(10)
 
 

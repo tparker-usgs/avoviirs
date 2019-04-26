@@ -21,6 +21,7 @@ from posttroll.message import Message, MessageError
 from avoviirsprocessor.processor import processor_factory, VOLCVIEW_BANDS
 from avoviirsprocessor import logger
 from avoviirsprocessor.coreprocessors import TIR, MIR, BTD, VIS
+import tomputils.util as tutil
 
 
 REQUEST_TIMEOUT = 10000
@@ -71,7 +72,9 @@ def main():
 
     while True:
         if updater.task_waiting:
-            request = {'desired products': list(VOLCVIEW_BANDS.keys())}
+            desired_products = tutil.get_env_var('VIIRS_PRODUCTS')
+            desired_products = desired_products.split(',')
+            request = {'desired products': desired_products}
             client.send_json(request)
             msg_bytes = client.recv()
             if msg_bytes:

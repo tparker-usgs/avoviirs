@@ -29,7 +29,7 @@ TASK_SERVER = "tcp://viirscollector:19091"
 UPDATE_PUBLISHER = "tcp://viirscollector:19191"
 
 
-class Updater(threading.Thread):
+class UpdateSubscriber(threading.Thread):
     def __init__(self, context):
         threading.Thread.__init__(self)
         self.socket = context.socket(zmq.SUB)
@@ -48,12 +48,11 @@ def process_message(msg_bytes):
         msg = Message.decode(msg_bytes)
         processor = processor_factory(msg)
         processor.process_message()
-    except MessageError as e:
-        logger.error("Message decode error.")
-        logger.exception(e)
-    except NotImplementedError as e:
-        logger.exception(e)
-    logger.debug("Whew, that was hard. Let rest for 9 seconds.")
+    except MessageError:
+        logger.exception("Message decode error.")
+    except NotImplementedError:
+        logger.exception("Crap. I accepted a message I can't process.")
+    logger.debug("Whew, that was hard. Let rest for 10 seconds.")
     time.sleep(10)
 
 
@@ -62,21 +61,22 @@ def main():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     context = zmq.Context()
-    logger.debug("starting updater")
-    updater = Updater(context)
-    updater.start()
-    logger.debug("started updater")
+    logger.debug("starting update_subscriber")
+    update_subscriber = UpdateSubscriber(context)
+    update_subscriber.start()
+    logger.debug("started update_subscriber")
 
-    client = context.socket(zmq.REQ)
-    client.connect(TASK_SERVER)
+    task_client = context.socket(zmq.REQ)
+    task_client.connect(TASK_SERVER)
+
+    desired_products = tutil.get_env_var('VIIRS_PRODUCTS')
+    desired_products = desired_products.split(',')
 
     while True:
-        if updater.task_waiting:
-            desired_products = tutil.get_env_var('VIIRS_PRODUCTS')
-            desired_products = desired_products.split(',')
+        if update_subscriber.task_waiting:
             request = {'desired products': desired_products}
-            client.send_json(request)
-            msg_bytes = client.recv()
+            task_client.send_json(request)
+            msg_bytes = task_client.recv()
             if msg_bytes:
                 process_message(msg_bytes)
             else:

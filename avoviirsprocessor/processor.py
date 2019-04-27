@@ -268,7 +268,7 @@ class Processor(ABC):
                                            data['orbit_number'],
                                            sector_def.area_id,
                                            self.product)
-            image_filename = "{}/{}.png",format(PNG_DIR, filename)
+            image_filename = "{}/{}.png".format(PNG_DIR, filename)
             print("writing {}".format(image_filename))
             pilimg.save(image_filename)
 

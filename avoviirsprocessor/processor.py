@@ -28,7 +28,7 @@ COAST_DIR = '/usr/local/gshhg'
 AREA_DEF = '/app/trollconfig/areas.def'
 PROD_ENDPOINT = "http://volcview.wr.usgs.gov/vv-api"
 DEV_ENDPOINT = "http://dev-volcview.wr.usgs.gov/vv-api"
-
+COVERAGE_THRESHOLD = .5
 
 def processor_factory(message):
     """Instanciate an approprieate processor object.
@@ -222,7 +222,7 @@ class Processor(ABC):
             coverage = overpass.area_coverage(sector_def)
             logger.debug("{} coverage: {}".format(sector_def.area_id,
                                                   coverage))
-            if coverage > .1:
+            if coverage > COVERAGE_THRESHOLD:
                 sectors.append(sector_def)
         return sectors
 

@@ -106,9 +106,9 @@ class Processor(ABC):
         self.product = product
         self.product_label = product_label
         self.volcview_band = volcview_band
-        self.scene = None
         self.data = message.data
         self.color_bar_font = aggdraw.Font(GOLDENROD, TYPEFACE, size=FONT_SIZE)
+        self.scene = self._create_scene()
 
     @abstractmethod
     def load_data(self):
@@ -250,7 +250,6 @@ class Processor(ABC):
         message = self.message
         logger.debug("Processing message: %s", message.encode())
         data = message.data
-        self.scene = self._create_scene()
         try:
             self.load_data()
         except KeyError:

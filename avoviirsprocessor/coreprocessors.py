@@ -13,6 +13,7 @@ class TIR(Processor):
                          'thermal infrared brightness tempeerature (c)', )
 
     def enhance_image(self, img):
+        img.crude_stretch(208.15, 308.15)  # -65c - 35c
         img.invert()
 
     def apply_colorbar(self, dcimg):
@@ -34,6 +35,9 @@ class MIR(Processor):
         self.colors = colormap.Colormap((0.0, (0.0, 0.0, 0.0)),
                                         (1.0, (1.0, 1.0, 1.0)))
         self.colors.set_range(-50, 50)
+
+    def enhance_image(self, img):
+        img.crude_stretch(223.15, 323.15)  # -50c - 50c
 
     def apply_colorbar(self, dcimg):
         super().draw_colorbar(dcimg, self.colors, 20, 10)
@@ -63,6 +67,7 @@ class BTD(Processor):
         self.colors.set_range(-6, 5)
 
     def enhance_image(self, img):
+        img.crude_stretch(-6, 5)
         img.colorize(self.colors)
 
     def apply_colorbar(self, dcimg):

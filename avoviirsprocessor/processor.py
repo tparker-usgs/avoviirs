@@ -30,6 +30,7 @@ PROD_ENDPOINT = "http://volcview.wr.usgs.gov/vv-api"
 DEV_ENDPOINT = "http://dev-volcview.wr.usgs.gov/vv-api"
 COVERAGE_THRESHOLD = .5
 
+
 def processor_factory(message):
     """Instanciate an approprieate processor object.
 

@@ -9,7 +9,7 @@ class TIR(Processor):
     Product = 'tir'
 
     def __init__(self, message):
-        super().__init__(message, TIR.Product, 'Thermal IR'
+        super().__init__(message, TIR.Product, 'Thermal IR',
                          'thermal infrared brightness tempeerature (c)', )
 
     def enhance_image(self, img):
@@ -29,7 +29,7 @@ class MIR(Processor):
     Product = 'mir'
 
     def __init__(self, message):
-        super().__init__(message, MIR.Product, 'Mid-IR'
+        super().__init__(message, MIR.Product, 'Mid-IR',
                          'mid-infrared brightness temperature (c)')
         self.colors = colormap.Colormap((0.0, (0.0, 0.0, 0.0)),
                                         (1.0, (1.0, 1.0, 1.0)))
@@ -47,7 +47,7 @@ class BTD(Processor):
     Product = 'btd'
 
     def __init__(self, message):
-        super().__init__(message, BTD.Product, 'TIR BTD'
+        super().__init__(message, BTD.Product, 'TIR BTD',
                          'brightness temperature difference')
         self.color_bar_font = aggdraw.Font((0, 0, 0), TYPEFACE, size=14)
         self.colors = colormap.Colormap((0.0, (0.5, 0.0, 0.0)),

@@ -100,7 +100,7 @@ class Processor(ABC):
        The product-specific portion of the labled shown on the volcview
        image.
     """
-    def __init__(self, message, product, product_label, volcview_band):
+    def __init__(self, message, product, volcview_band, product_label):
         self.message = message
         self.product = product
         self.product_label = product_label
@@ -110,13 +110,8 @@ class Processor(ABC):
         self.color_bar_font = aggdraw.Font(GOLDENROD, TYPEFACE, size=FONT_SIZE)
 
     @abstractmethod
-    def load_data(self, scn):
+    def load_data(self):
         """Load data into a scene
-
-        Parameters
-        ----------
-        scn : satpy.scene.Scene
-            Scene to receive data
         """
         pass
 

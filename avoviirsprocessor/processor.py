@@ -21,6 +21,7 @@ from abc import ABC, abstractmethod
 
 GOLDENROD = (218, 165, 32)
 PNG_DIR = '/viirs/png'
+MSG_DIR = '/viirs/messages'
 TYPEFACE = "/app/avoviirsprocessor/Cousine-Bold.ttf"
 FONT_SIZE = 14
 COAST_DIR = '/usr/local/gshhg'
@@ -262,17 +263,16 @@ class Processor(ABC):
                                                 sector_def)
             self.decorate_pilimg(pilimg)
             time_str = data['start_time'].strftime('%Y%m%d.%H%M')
-            filename_str = "{}/testing-{}-{}-{}-viirs-{}-{}"
-            filename = filename_str.format(PNG_DIR, time_str,
-                                           data['platform_name'],
+            filename_str = "testing-{}-{}-{}-viirs-{}-{}"
+            filename = filename_str.format(time_str, data['platform_name'],
                                            data['orbit_number'],
                                            sector_def.area_id,
                                            self.product)
-            image_filename = filename + ".png"
+            image_filename = "{}/{}.png",format(PNG_DIR, filename)
             print("writing {}".format(image_filename))
             pilimg.save(image_filename)
 
-            message_filename = filename + ".txt"
+            message_filename = "{}/{}.txt".format(MSG_DIR, filename)
             with open(message_filename, "w") as msg_file:
                 msg_file.write(message.encode())
 

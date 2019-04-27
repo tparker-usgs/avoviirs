@@ -53,7 +53,7 @@ def process_message(msg_bytes):
     except NotImplementedError:
         logger.exception("Crap. I accepted a message I can't process.")
     except ValueError:
-        logger.exception()
+        logger.exception("I got a message, but couldn't find the data")
     logger.debug("Whew, that was hard. Let rest for 10 seconds.")
     time.sleep(10)
 

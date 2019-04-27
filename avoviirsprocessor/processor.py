@@ -105,6 +105,7 @@ class Processor(ABC):
         self.product = product
         self.product_label = product_label
         self.volcview_band = volcview_band
+        self.scene = None
         self.data = message.data
         self.color_bar_font = aggdraw.Font(GOLDENROD, TYPEFACE, size=FONT_SIZE)
 
@@ -186,7 +187,7 @@ class Processor(ABC):
                        bg_opacity=128, bg='black', line=GOLDENROD,
                        font_size=14)
 
-    def create_scene(self):
+    def _create_scene(self):
         """Create a scene object from available data.
 
         Returns
@@ -209,13 +210,8 @@ class Processor(ABC):
 
         return scene
 
-    def find_sectors(self, scene):
+    def find_sectors(self):
         """Identify sectors with at least some coverage by the provided scene.
-
-        Parameters
-        ----------
-        scene : satpy.scene.Scene
-            Scene to use for estimatated coverage
 
         Returns
         -------
@@ -223,8 +219,8 @@ class Processor(ABC):
             area_id of each sector with some coverage.
         """
         data = self.message.data
-        overpass = Pass(data['platform_name'], scene.start_time,
-                        scene.end_time, instrument='viirs')
+        overpass = Pass(data['platform_name'], self.scene.start_time,
+                        self.scene.end_time, instrument='viirs')
         sectors = []
         for sector_def in parse_area_file(AREA_DEF):
             coverage = overpass.area_coverage(sector_def)
@@ -258,15 +254,15 @@ class Processor(ABC):
         message = self.message
         logger.debug("Processing message: %s", message.encode())
         data = message.data
-        scn = self.create_scene()
+        self.scene = self._create_scene()
         try:
-            scn = self.load_data(scn)
+            self.load_data()
         except KeyError:
             logger.exception("missing data, skipping %s", self.product)
             return
 
-        for sector_def in self.find_sectors(scn):
-            local = scn.resample(sector_def)
+        for sector_def in self.find_sectors():
+            local = self.scene.resample(sector_def)
             pilimg = self.get_enhanced_pilimage(local[self.product].squeeze(),
                                                 sector_def)
             self.decorate_pilimg(pilimg)

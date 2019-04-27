@@ -20,10 +20,9 @@ class TIR(Processor):
         colors.set_range(-65, 35)
         super().draw_colorbar(dcimg, colors, 20, 10)
 
-    def load_data(self, scn):
-        scn.load(['I05'])
-        scn['tir'] = scn['I05']
-        return scn
+    def load_data(self):
+        self.scene.load(['I05'])
+        self.scene['tir'] = self.scene['I05']
 
 
 class MIR(Processor):
@@ -39,10 +38,9 @@ class MIR(Processor):
     def apply_colorbar(self, dcimg):
         super().draw_colorbar(dcimg, self.colors, 20, 10)
 
-    def load_data(self, scn):
-        scn.load(['I04'])
-        scn['mir'] = scn['I04']
-        return scn
+    def load_data(self):
+        self.scene.load(['I04'])
+        self.scene['mir'] = self.scene['I04']
 
 
 class BTD(Processor):
@@ -70,11 +68,11 @@ class BTD(Processor):
     def apply_colorbar(self, dcimg):
         super().draw_colorbar(dcimg, self.colors, 1, .5)
 
-    def load_data(self, scn):
-        scn.load(['M15', 'M16'])
-        scn['btd'] = scn['M15'] - scn['M16']
-        scn['btd'].attrs = combine_metadata(scn['M15'], scn['M16'])
-        return scn
+    def load_data(self):
+        self.scene.load(['M15', 'M16'])
+        self.scene['btd'] = self.scene['M15'] - self.scene['M16']
+        self.scene['btd'].attrs = combine_metadata(self.scene['M15'],
+                                                   self.scene['M16'])
 
 
 class VIS(Processor):
@@ -86,8 +84,7 @@ class VIS(Processor):
     def enhance_image(self, img):
         cira_stretch(img)
 
-    def load_data(self, scn):
-        scn.load(['true_color'])
-        scn = scn.resample(resampler='native')
-        scn['vis'] = scn['true_color']
-        return scn
+    def load_data(self):
+        self.scene.load(['true_color'])
+        self.scene = self.scene.resample(resampler='native')
+        self.scene['vis'] = self.scene['true_color']

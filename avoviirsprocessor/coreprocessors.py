@@ -67,7 +67,6 @@ class BTD(Processor):
         self.colors.set_range(-6, 5)
 
     def enhance_image(self, img):
-        img.crude_stretch(-6, 5)
         img.colorize(self.colors)
 
     def apply_colorbar(self, dcimg):

@@ -258,7 +258,12 @@ class Processor(ABC):
             return
 
         for sector_def in self.find_sectors():
-            local = self.scene.resample(sector_def)
+            try:
+                local = self.scene.resample(sector_def)
+            except ValueError:
+                logger.exception("Couldn't resample to sector %s",
+                                 sector_def.area_id)
+                continue
             pilimg = self.get_enhanced_pilimage(local[self.product].squeeze(),
                                                 sector_def)
             self.decorate_pilimg(pilimg)

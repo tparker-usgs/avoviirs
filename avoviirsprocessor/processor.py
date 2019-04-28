@@ -18,6 +18,7 @@ from avoviirsprocessor import logger
 import aggdraw
 import tomputils.util as tutil
 from abc import ABC, abstractmethod
+from datetime import timedelta
 
 GOLDENROD = (218, 165, 32)
 PNG_DIR = '/viirs/png'
@@ -29,6 +30,7 @@ AREA_DEF = '/app/trollconfig/areas.def'
 PROD_ENDPOINT = "http://volcview.wr.usgs.gov/vv-api"
 DEV_ENDPOINT = "http://dev-volcview.wr.usgs.gov/vv-api"
 COVERAGE_THRESHOLD = .5
+ORBIT_SLACK = timedelta(minutes=30)
 
 
 def processor_factory(message):
@@ -193,8 +195,8 @@ class Processor(ABC):
             Inialized scene object
         """
         data = self.message.data
-        filter_parameters = {'start_time': data['start_time'],
-                             'end_time': data['end_time'],
+        filter_parameters = {'start_time': data['start_time'] - ORBIT_SLACK,
+                             'end_time': data['end_time'] + ORBIT_SLACK,
                              'platform_name': data['platform_name']}
         filenames = find_files_and_readers(base_dir='/viirs/sdr',
                                            reader='viirs_sdr',

@@ -19,6 +19,7 @@ import aggdraw
 import tomputils.util as tutil
 from abc import ABC, abstractmethod
 from datetime import timedelta
+import io
 
 GOLDENROD = (218, 165, 32)
 PNG_DIR = '/viirs/png'
@@ -57,34 +58,33 @@ def processor_factory(message):
     raise NotImplementedError("I don't know how to {}".format(product))
 
 
-def publish(sector, band, time, file):
-    """Deliver a product to volcview.
+def publish_products(message):
+    logger.debug("Processing message: %s", message.encode())
+    processor = processor_factory(message)
+    processor.load_data()
 
-    Parameters
-    ----------
-    sector : string
-        volcview sector name
-    band : string
-        volcview band
-    time : datetime
-        time as displayed in volcview, typically time of earliest sample.
-    file : string
-        absolute path to image file
-    """
+    for sector_def in processor.find_sectors():
+        file_base = processor.get_file_base(sector_def)
+        message_filename = "{}/{}.txt".format(MSG_DIR, file_base)
+        with open(message_filename, "w") as msg_file:
+            msg_file.write(message.encode())
+        pilimg = processor.get_image(sector_def)
+        processor.write_pilimg(pilimg, file_base)
+        processor.publish_pilimg(pilimg, file_base, sector_def.area_id)
+
+    logger.debug("All done with this task.")
+
+
+def publish_product(filename, pngimg, volcview_args):
     user = tutil.get_env_var('VOLCVIEW_USER')
     passwd = tutil.get_env_var('VOLCVIEW_PASSWD')
     headers = {'username': user, 'password': passwd}
-    files = {'file': (file, open(file, 'rb'))}
-    data = {'sector': sector,
-            'band': band,
-            'dataType': 'viirs',
-            'imageUnixtime': calendar.timegm(time.timetuple()),
-            }
-
+    files = {'file': (filename, pngimg)}
     url = DEV_ENDPOINT + "/imageApi/uploadImage"
     print("publishing image to {}".format(url))
-    print("data {}".format(data))
-    response = requests.post(url, headers=headers, data=data, files=files)
+    print("data {}".format(volcview_args))
+    response = requests.post(url, headers=headers, data=volcview_args,
+                             files=files)
     print("server said: {}".format(response.text))
     return response
 
@@ -247,38 +247,35 @@ class Processor(ABC):
                           fill_value=0)
         return img.pil_image()
 
-    def process_message(self):
-        """Do all the work.
-        """
-        message = self.message
-        logger.debug("Processing message: %s", message.encode())
-        data = message.data
-        try:
-            self.load_data()
-        except KeyError:
-            logger.exception("missing data, skipping %s", self.product)
-            return
+    def get_image(self, sector_def):
+        local = self.scene.resample(sector_def)
+        pilimg = self.get_enhanced_pilimage(local[self.product].squeeze(),
+                                            sector_def)
+        self.decorate_pilimg(pilimg)
+        return pilimg
 
-        for sector_def in self.find_sectors():
-            local = self.scene.resample(sector_def)
-            pilimg = self.get_enhanced_pilimage(local[self.product].squeeze(),
-                                                sector_def)
-            self.decorate_pilimg(pilimg)
-            time_str = data['start_time'].strftime('%Y%m%d.%H%M')
-            filename_str = "testing-{}-{}-{}-viirs-{}-{}"
-            filename = filename_str.format(time_str, data['platform_name'],
-                                           data['orbit_number'],
-                                           sector_def.area_id,
-                                           self.product)
-            image_filename = "{}/{}.png".format(PNG_DIR, filename)
-            print("writing {}".format(image_filename))
-            pilimg.save(image_filename)
+    def get_file_base(self, sector_def):
+        data = self.message.data
+        time_str = data['start_time'].strftime('%Y%m%d.%H%M')
+        filename_str = "testing-{}-{}-{}-viirs-{}-{}"
+        filename = filename_str.format(time_str, data['platform_name'],
+                                       data['orbit_number'],
+                                       sector_def.area_id,
+                                       self.product)
+        return filename
 
-            message_filename = "{}/{}.txt".format(MSG_DIR, filename)
-            with open(message_filename, "w") as msg_file:
-                msg_file.write(message.encode())
+    def write_pilimg(self, pilimg, file_base):
+        image_filename = "{}/{}.png".format(PNG_DIR, file_base)
+        print("writing {}".format(image_filename))
+        pilimg.save(image_filename)
 
-            publish(sector_def.area_id, self.volcview_band, data['start_time'],
-                    image_filename)
-
-        logger.debug("All done with this task.")
+    def publish_pilimg(self, pilimg, file_base, area_id):
+        unixtime = calendar.timegm(self.message.data['start_time'].timetuple())
+        volcview_args = {'sector': area_id,
+                         'band': self.volcview_band,
+                         'dataType': 'viirs',
+                         'imageUnixtime': unixtime}
+        filename = file_base + ".png"
+        pngimg = io.BytesIO()
+        pilimg.save(pngimg, format="PNG")
+        self.publish_product(filename, pngimg, volcview_args)

@@ -18,11 +18,10 @@ import signal
 import threading
 
 from posttroll.message import Message, MessageError
-from avoviirsprocessor.processor import processor_factory
+from avoviirsprocessor.processor import publish_products
 from avoviirsprocessor import logger
 from avoviirsprocessor.coreprocessors import TIR, MIR, BTD, VIS # NOQA
 import tomputils.util as tutil
-
 
 REQUEST_TIMEOUT = 10000
 TASK_SERVER = "tcp://viirscollector:19091"
@@ -45,15 +44,16 @@ class UpdateSubscriber(threading.Thread):
 
 def process_message(msg_bytes):
     try:
-        msg = Message.decode(msg_bytes)
-        processor = processor_factory(msg)
-        processor.process_message()
+        message = Message.decode(msg_bytes)
+        publish_products(message)
     except MessageError:
         logger.exception("Message decode error.")
     except NotImplementedError:
         logger.exception("Crap. I accepted a message I can't process.")
     except ValueError:
         logger.exception("I got a message, but couldn't find the data")
+    except KeyError:
+        logger.exception("missing data, skipping")
     logger.debug("Whew, that was hard. Let rest for 10 seconds.")
     time.sleep(10)
 

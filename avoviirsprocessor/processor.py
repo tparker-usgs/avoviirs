@@ -278,4 +278,4 @@ class Processor(ABC):
         filename = file_base + ".png"
         pngimg = io.BytesIO()
         pilimg.save(pngimg, format="PNG")
-        self.publish_product(filename, pngimg, volcview_args)
+        publish_product(filename, pngimg, volcview_args)

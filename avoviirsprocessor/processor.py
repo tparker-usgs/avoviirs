@@ -231,10 +231,11 @@ class Processor(ABC):
 
     def get_image(self, sector_def):
         local = self.scene.resample(sector_def)
-        pilimg = to_image(local[self.product].squeeze())
-        self.enhance_image(pilimg)
-        pilimg = add_overlay(pilimg, area=sector_def, coast_dir=COAST_DIR,
+        img = to_image(local[self.product].squeeze())
+        self.enhance_image(img)
+        img = add_overlay(img, area=sector_def, coast_dir=COAST_DIR,
                              color=GOLDENROD, fill_value=0)
+        pilimg = img.pil_image()
         self.decorate_pilimg(pilimg)
         return pilimg
 

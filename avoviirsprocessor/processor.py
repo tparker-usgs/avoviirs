@@ -229,28 +229,12 @@ class Processor(ABC):
                 sectors.append(sector_def)
         return sectors
 
-    def get_enhanced_pilimage(self, dataset, area):
-        """Produce a pill image for the provided dataset and area.
-
-        Parameters
-        ----------
-        dataset : satpy.DatasetID
-        area : pyresample.geometry.AreaDefinition
-
-        Returns
-        -------
-        PIL.image
-        """
-        img = to_image(dataset)
-        self.enhance_image(img)
-        img = add_overlay(img, area=area, coast_dir=COAST_DIR, color=GOLDENROD,
-                          fill_value=0)
-        return img.pil_image()
-
     def get_image(self, sector_def):
         local = self.scene.resample(sector_def)
-        pilimg = self.get_enhanced_pilimage(local[self.product].squeeze(),
-                                            sector_def)
+        pilimg = to_image(local[self.product].squeeze())
+        self.enhance_image(pilimg)
+        pilimg = add_overlay(pilimg, area=sector_def, coast_dir=COAST_DIR,
+                             color=GOLDENROD, fill_value=0)
         self.decorate_pilimg(pilimg)
         return pilimg
 

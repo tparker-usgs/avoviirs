@@ -1,6 +1,7 @@
 import argparse
 from posttroll.message import Message
 from avoviirsprocessor.processor import publish_products
+from avoviirsprocessor.coreprocessors import * # NOQA
 
 
 def _arg_parse():

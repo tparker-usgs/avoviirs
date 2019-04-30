@@ -5,7 +5,7 @@ from avoviirsprocessor.coreprocessors import * # NOQA
 
 
 def _arg_parse():
-    description = "Reprocesses a serialized message in a faile."
+    description = "Reprocesses a serialized message in a file."
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument("message", help="path to serialized message")
 

@@ -20,4 +20,4 @@ import tomputils.util as tutil
 
 logger = tutil.setup_logging("avoviirsprocessor errors")
 
-__version__ = "3.15.0"
+__version__ = "3.15.1"

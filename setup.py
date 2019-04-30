@@ -28,7 +28,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'process_message = avoviirsprocessor.process_meassage:main'
+            'process_message = avoviirsprocessor.process_message:main'
         ]
     }
 

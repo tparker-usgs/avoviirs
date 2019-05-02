@@ -179,7 +179,7 @@ class Processor(ABC):
          dcimg : pydecorate.DecoratorAGG
             Image to label
         """
-        start_string = self.data['start_time'].strftime('%m/%d/%Y %H:%M UTC')
+        start_string = self.scene.start_time.strftime('%m/%d/%Y %H:%M UTC')
         label = "{} {} VIIRS {}".format(start_string,
                                         self.data['platform_name'],
                                         self.product_label)
@@ -242,7 +242,7 @@ class Processor(ABC):
 
     def get_file_base(self, sector_def):
         data = self.message.data
-        time_str = data['start_time'].strftime('%Y%m%d.%H%M')
+        time_str = self.scene.start_time.strftime('%Y%m%d.%H%M')
         filename_str = "testing-{}-{}-{}-viirs-{}-{}"
         filename = filename_str.format(time_str, data['platform_name'],
                                        data['orbit_number'],
@@ -265,7 +265,7 @@ class Processor(ABC):
         pilimg.save("{}/{}".format(file_path, filename_str))
 
     def publish_pilimg(self, pilimg, file_base, area_id):
-        unixtime = calendar.timegm(self.message.data['start_time'].timetuple())
+        unixtime = calendar.timegm(self.scene.start_time.timetuple())
         volcview_args = {'sector': area_id,
                          'band': self.volcview_band,
                          'dataType': 'viirs',

@@ -69,7 +69,8 @@ def publish_products(message):
         with open(message_filename, "w") as msg_file:
             msg_file.write(message.encode())
         pilimg = processor.get_image(sector_def)
-        processor.write_pilimg(pilimg, file_base)
+        # processor.write_pilimg(pilimg, file_base)
+        processor.write_old_volcview(pilimg, sector_def)
         processor.publish_pilimg(pilimg, file_base, sector_def.area_id)
 
     logger.debug("All done with this task.")
@@ -253,6 +254,16 @@ class Processor(ABC):
         image_filename = "{}/{}.png".format(PNG_DIR, file_base)
         print("writing {}".format(image_filename))
         pilimg.save(image_filename)
+
+    def write_old_volcview(self, pilimg, sector_def):
+        data = self.message.data
+        time_str = data['start_time'].strftime('%Y%m%d.%H%M')
+        file_path = "{}/{}".format(PNG_DIR, sector_def.area_id[-4:])
+        product = "ASH" if self.product == "btd" else self.product.upper()
+        filename_str = "{}.viirs.--.--.{}.{}.png".format(time_str,
+                                                         sector_def.area_id,
+                                                         product)
+        pilimg.save("{}/{}".format(file_path, filename_str))
 
     def publish_pilimg(self, pilimg, file_base, area_id):
         unixtime = calendar.timegm(self.scene.start_time.timetuple())

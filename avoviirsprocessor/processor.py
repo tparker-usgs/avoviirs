@@ -259,9 +259,10 @@ class Processor(ABC):
         data = self.message.data
         time_str = data['start_time'].strftime('%Y%m%d.%H%M')
         file_path = "{}/{}".format(PNG_DIR, sector_def.area_id[-4:])
+        product = "ASH" if self.product == "btd" else self.product.upper()
         filename_str = "{}.viirs.--.--.{}.{}.png".format(time_str,
                                                          sector_def.area_id,
-                                                         self.product.upper())
+                                                         product)
         pilimg.save("{}/{}".format(file_path, filename_str))
 
     def publish_pilimg(self, pilimg, file_base, area_id):

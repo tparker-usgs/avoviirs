@@ -256,7 +256,6 @@ class Processor(ABC):
         pilimg.save(image_filename)
 
     def write_old_volcview(self, pilimg, sector_def):
-        data = self.message.data
         time_str = self.scene.start_time.strftime('%Y%m%d.%H%M')
         file_path = "{}/{}".format(PNG_DIR, sector_def.area_id[-4:])
         product = "ASH" if self.product == "btd" else self.product.upper()

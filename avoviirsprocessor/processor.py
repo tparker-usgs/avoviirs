@@ -263,7 +263,9 @@ class Processor(ABC):
         filename_str = "{}.viirs.--.--.{}.{}.png".format(time_str,
                                                          sector_def.area_id,
                                                          product)
+        logger.info("writing file %s/%s", file_path, filename_str)
         pilimg.save("{}/{}".format(file_path, filename_str))
+        logger.debug("finished writing file %s/%s", file_path, filename_str)
 
     def publish_pilimg(self, pilimg, file_base, area_id):
         unixtime = calendar.timegm(self.scene.start_time.timetuple())

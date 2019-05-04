@@ -30,7 +30,6 @@ COAST_DIR = '/usr/local/gshhg'
 AREA_DEF = '/app/trollconfig/areas.def'
 PROD_ENDPOINT = "http://volcview.wr.usgs.gov/vv-api"
 DEV_ENDPOINT = "http://dev-volcview.wr.usgs.gov/vv-api"
-COVERAGE_THRESHOLD = .5
 ORBIT_SLACK = timedelta(minutes=30)
 
 
@@ -226,7 +225,7 @@ class Processor(ABC):
             coverage = overpass.area_coverage(sector_def)
             logger.debug("{} coverage: {}".format(sector_def.area_id,
                                                   coverage))
-            if coverage > COVERAGE_THRESHOLD:
+            if coverage > int(tutil.get_env_var("COVERAGE_THRESHOLD", 10)):
                 sectors.append(sector_def)
         return sectors
 

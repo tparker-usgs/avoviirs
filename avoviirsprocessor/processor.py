@@ -221,11 +221,13 @@ class Processor(ABC):
         overpass = Pass(data['platform_name'], self.scene.start_time,
                         self.scene.end_time, instrument='viirs')
         sectors = []
+        coverage_threashold = float(tutil.get_env_var("COVERAGE_THRESHOLD",
+                                                      .1))
         for sector_def in parse_area_file(AREA_DEF):
             coverage = overpass.area_coverage(sector_def)
             logger.debug("{} coverage: {}".format(sector_def.area_id,
                                                   coverage))
-            if coverage > float(tutil.get_env_var("COVERAGE_THRESHOLD", .1)):
+            if coverage > coverage_threashold:
                 sectors.append(sector_def)
         return sectors
 

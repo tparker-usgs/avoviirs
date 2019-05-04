@@ -225,7 +225,7 @@ class Processor(ABC):
             coverage = overpass.area_coverage(sector_def)
             logger.debug("{} coverage: {}".format(sector_def.area_id,
                                                   coverage))
-            if coverage > int(tutil.get_env_var("COVERAGE_THRESHOLD", 10)):
+            if coverage > float(tutil.get_env_var("COVERAGE_THRESHOLD", .1)):
                 sectors.append(sector_def)
         return sectors
 

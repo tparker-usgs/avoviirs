@@ -30,7 +30,6 @@ COAST_DIR = '/usr/local/gshhg'
 AREA_DEF = '/app/trollconfig/areas.def'
 PROD_ENDPOINT = "http://volcview.wr.usgs.gov/vv-api"
 DEV_ENDPOINT = "http://dev-volcview.wr.usgs.gov/vv-api"
-COVERAGE_THRESHOLD = .5
 ORBIT_SLACK = timedelta(minutes=30)
 
 
@@ -222,11 +221,13 @@ class Processor(ABC):
         overpass = Pass(data['platform_name'], self.scene.start_time,
                         self.scene.end_time, instrument='viirs')
         sectors = []
+        coverage_threashold = float(tutil.get_env_var("COVERAGE_THRESHOLD",
+                                                      .1))
         for sector_def in parse_area_file(AREA_DEF):
             coverage = overpass.area_coverage(sector_def)
             logger.debug("{} coverage: {}".format(sector_def.area_id,
                                                   coverage))
-            if coverage > COVERAGE_THRESHOLD:
+            if coverage > coverage_threashold:
                 sectors.append(sector_def)
         return sectors
 
@@ -256,14 +257,15 @@ class Processor(ABC):
         pilimg.save(image_filename)
 
     def write_old_volcview(self, pilimg, sector_def):
-        data = self.message.data
-        time_str = data['start_time'].strftime('%Y%m%d.%H%M')
+        time_str = self.scene.start_time.strftime('%Y%m%d.%H%M')
         file_path = "{}/{}".format(PNG_DIR, sector_def.area_id[-4:])
         product = "ASH" if self.product == "btd" else self.product.upper()
         filename_str = "{}.viirs.--.--.{}.{}.png".format(time_str,
                                                          sector_def.area_id,
                                                          product)
+        logger.info("writing file %s/%s", file_path, filename_str)
         pilimg.save("{}/{}".format(file_path, filename_str))
+        logger.debug("finished writing file %s/%s", file_path, filename_str)
 
     def publish_pilimg(self, pilimg, file_base, area_id):
         unixtime = calendar.timegm(self.scene.start_time.timetuple())

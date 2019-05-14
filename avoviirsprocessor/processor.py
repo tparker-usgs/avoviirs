@@ -224,6 +224,7 @@ class Processor(ABC):
         coverage_threashold = float(tutil.get_env_var("COVERAGE_THRESHOLD",
                                                       .1))
         for sector_def in parse_area_file(AREA_DEF):
+            logger.debug("Checking coverage for %s", sector_def.area_id)
             coverage = overpass.area_coverage(sector_def)
             logger.debug("{} coverage: {}".format(sector_def.area_id,
                                                   coverage))

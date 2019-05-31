@@ -115,8 +115,8 @@ class Processor(ABC):
         self.data = message.data
         self.color_bar_font = aggdraw.Font(GOLDENROD, TYPEFACE, size=FONT_SIZE)
         self.scene = self._create_scene()
-        context = zmq.context()
-        self.publisher = context.socker(zmq.PUB)
+        context = zmq.Context()
+        self.publisher = context.socket(zmq.PUB)
         self.publisher.connect(SECTOR_PROXY)
 
     @abstractmethod
@@ -310,4 +310,4 @@ class Processor(ABC):
         pilimg.save(pngimg, format="PNG")
         pngimg.seek(0)
         publish_product(filename, pngimg, volcview_args)
-        self.socket.send_json(volcview_args)
+        self.publisher.send_json(volcview_args)

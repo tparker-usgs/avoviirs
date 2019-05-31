@@ -20,6 +20,8 @@ import tomputils.util as tutil
 from abc import ABC, abstractmethod
 from datetime import timedelta
 import io
+import zmq
+
 
 GOLDENROD = (218, 165, 32)
 PNG_DIR = "/viirs/png"
@@ -31,6 +33,7 @@ AREA_DEF = "/app/trollconfig/areas.def"
 PROD_ENDPOINT = "http://volcview.wr.usgs.gov/vv-api"
 DEV_ENDPOINT = "http://dev-volcview.wr.usgs.gov/vv-api"
 ORBIT_SLACK = timedelta(minutes=30)
+SECTOR_PROXY = "tcp://viirstools:29292"
 
 
 def processor_factory(message):
@@ -112,6 +115,9 @@ class Processor(ABC):
         self.data = message.data
         self.color_bar_font = aggdraw.Font(GOLDENROD, TYPEFACE, size=FONT_SIZE)
         self.scene = self._create_scene()
+        context = zmq.context()
+        self.publisher = context.socker(zmq.PUB)
+        self.publisher.connect(SECTOR_PROXY)
 
     @abstractmethod
     def load_data(self):
@@ -304,3 +310,4 @@ class Processor(ABC):
         pilimg.save(pngimg, format="PNG")
         pngimg.seek(0)
         publish_product(filename, pngimg, volcview_args)
+        self.socket.send_json(volcview_args)

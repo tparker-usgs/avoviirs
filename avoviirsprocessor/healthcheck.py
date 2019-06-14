@@ -42,8 +42,13 @@ def main():
 
     if socket.recv_json()["queue length"] > 0:
         st = os.stat(HEARTBEAT_FILE)
-        if st.st_mtime < time.time() - MAX_IDLE:
+        last_hb = time.time() - st.st_mtime
+        print("Heartbeat age: {}".format(last_hb))
+        if last_hb > MAX_IDLE:
+            print("Something is wrong")
             exit(1)
+    else:
+        print("Queue is empty")
 
 
 if __name__ == "__main__":

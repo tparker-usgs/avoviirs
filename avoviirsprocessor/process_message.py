@@ -1,7 +1,9 @@
 import argparse
+from pathlib import Path
 from posttroll.message import Message
 from avoviirsprocessor.processor import publish_products
 from avoviirsprocessor.coreprocessors import *  # NOQA
+from . import HEARTBEAT_FILE
 
 
 def _arg_parse():
@@ -33,6 +35,7 @@ def main():
     for (key, message) in get_messages(args.message):
         print(key)
         publish_products(message)
+        Path(HEARTBEAT_FILE).touch()
 
 
 if __name__ == "__main__":

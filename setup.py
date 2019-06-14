@@ -26,8 +26,8 @@ setup(
     install_requires=["tomputils>=1.12.16"],
     entry_points={
         "console_scripts": [
-            "process_message = avoviirsprocessor.process_message:main"
-            "healthcheck = avoviirsprocessor.healthcheck:main"
+            "process_message = avoviirsprocessor.process_message:main",
+            "healthcheck = avoviirsprocessor.healthcheck:main",
         ]
     },
 )

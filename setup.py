@@ -29,6 +29,7 @@ setup(
     entry_points={
         'console_scripts': [
             'process_message = avoviirsprocessor.process_message:main'
+            'healthcheck = avoviirsprocessor.healthcheck:main'
         ]
     }
 

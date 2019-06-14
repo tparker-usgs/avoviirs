@@ -58,7 +58,6 @@ def process_message(msg_bytes):
     except KeyError:
         logger.exception("missing data, skipping")
 
-    Path(HEARTBEAT_FILE).touch()
     logger.debug("Whew, that was hard. Let rest for 10 seconds.")
     time.sleep(10)
 
@@ -80,6 +79,7 @@ def main():
     desired_products = desired_products.split(",")
 
     while True:
+        Path(HEARTBEAT_FILE).touch()
         if update_subscriber.task_waiting:
             request = {"desired products": desired_products}
             task_client.send_json(request)

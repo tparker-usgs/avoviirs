@@ -20,8 +20,11 @@ import threading
 from posttroll.message import Message, MessageError
 from avoviirsprocessor.processor import publish_products
 from avoviirsprocessor import logger
-from avoviirsprocessor.coreprocessors import TIR, MIR, BTD, VIS # NOQA
+from avoviirsprocessor.coreprocessors import TIR, MIR, BTD, VIS  # NOQA
 import tomputils.util as tutil
+from pathlib import Path
+
+HEARTBEAT_FILE = "/tmp/heartbeat"
 
 REQUEST_TIMEOUT = 10000
 TASK_SERVER = "tcp://viirscollector:19091"
@@ -32,14 +35,14 @@ class UpdateSubscriber(threading.Thread):
     def __init__(self, context):
         threading.Thread.__init__(self)
         self.socket = context.socket(zmq.SUB)
-        self.socket.setsockopt_string(zmq.SUBSCRIBE, '')
+        self.socket.setsockopt_string(zmq.SUBSCRIBE, "")
         self.socket.connect(UPDATE_PUBLISHER)
         self.task_waiting = False
 
     def run(self):
         while True:
             update = self.socket.recv_json()
-            self.task_waiting = update['queue length'] > 0
+            self.task_waiting = update["queue length"] > 0
 
 
 def process_message(msg_bytes):
@@ -54,6 +57,8 @@ def process_message(msg_bytes):
         logger.exception("I got a message, but couldn't find the data")
     except KeyError:
         logger.exception("missing data, skipping")
+
+    Path(HEARTBEAT_FILE).touch()
     logger.debug("Whew, that was hard. Let rest for 10 seconds.")
     time.sleep(10)
 
@@ -71,12 +76,12 @@ def main():
     task_client = context.socket(zmq.REQ)
     task_client.connect(TASK_SERVER)
 
-    desired_products = tutil.get_env_var('VIIRS_PRODUCTS')
-    desired_products = desired_products.split(',')
+    desired_products = tutil.get_env_var("VIIRS_PRODUCTS")
+    desired_products = desired_products.split(",")
 
     while True:
         if update_subscriber.task_waiting:
-            request = {'desired products': desired_products}
+            request = {"desired products": desired_products}
             task_client.send_json(request)
             msg_bytes = task_client.recv()
             if msg_bytes:
@@ -87,5 +92,5 @@ def main():
             time.sleep(1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

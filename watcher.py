@@ -79,6 +79,7 @@ def main():
     desired_products = desired_products.split(",")
 
     while True:
+        logger.debug("beating heart")
         Path(HEARTBEAT_FILE).touch()
         if update_subscriber.task_waiting:
             request = {"desired products": desired_products}
@@ -87,8 +88,10 @@ def main():
             if msg_bytes:
                 process_message(msg_bytes)
             else:
+                logger.debug("No job received")
                 time.sleep(1)
         else:
+            logger.debug("Queue empty")
             time.sleep(1)
 
 

@@ -87,11 +87,13 @@ def main():
             task_client.send_json(request)
             logger.debug("tomp says 2")
             msg_bytes = task_client.recv()
+            logger.debug("tomp says 3")
             if msg_bytes:
                 process_message(msg_bytes)
             else:
                 logger.debug("No job received")
                 time.sleep(1)
+            logger.debug("tomp says 4")
         else:
             logger.debug("Queue empty")
             time.sleep(5)

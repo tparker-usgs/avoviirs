@@ -82,8 +82,10 @@ def main():
         logger.debug("beating heart")
         Path(HEARTBEAT_FILE).touch()
         if update_subscriber.task_waiting:
+            logger.debug("tomp says 1")
             request = {"desired products": desired_products}
             task_client.send_json(request)
+            logger.debug("tomp says 2")
             msg_bytes = task_client.recv()
             if msg_bytes:
                 process_message(msg_bytes)
@@ -92,7 +94,7 @@ def main():
                 time.sleep(1)
         else:
             logger.debug("Queue empty")
-            time.sleep(1)
+            time.sleep(5)
 
 
 if __name__ == "__main__":

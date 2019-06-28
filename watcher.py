@@ -38,11 +38,13 @@ class UpdateSubscriber(threading.Thread):
         self.socket.setsockopt_string(zmq.SUBSCRIBE, "")
         self.socket.connect(UPDATE_PUBLISHER)
         self.task_waiting = False
+        self.queue_length = None
 
     def run(self):
         while True:
             update = self.socket.recv_json()
             self.task_waiting = update["queue length"] > 0
+            self.queue_length = update["queue length"]
 
 
 def process_message(msg_bytes):
@@ -85,7 +87,7 @@ def main():
             logger.debug("tomp says 1")
             request = {"desired products": desired_products}
             task_client.send_json(request)
-            logger.debug("tomp says 2")
+            logger.debug("tomp says 2 {}".format(update_subscriber.queue_length))
             msg_bytes = task_client.recv()
             logger.debug("tomp says 3")
             if msg_bytes:

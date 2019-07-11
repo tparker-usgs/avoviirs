@@ -17,7 +17,8 @@ Process VIIRS data at AVO
 
 
 import tomputils.util as tutil
+from avoviirsprocessor.version import __version__
 
 logger = tutil.setup_logging("avoviirsprocessor errors")
 
-__version__ = "3.18.9"
+__all__ = ["__version__"]

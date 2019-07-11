@@ -35,6 +35,10 @@ class UpdateSubscriber(threading.Thread):
     def __init__(self, context):
         threading.Thread.__init__(self)
         self.socket = context.socket(zmq.SUB)
+        self.socket.setsockopt(zmq.TCP_KEEPALIVE, 1)
+        self.socket.setsockopt(zmq.TCP_KEEPALIVE_IDLE, 60)
+        self.socket.setsockopt(zmq.TCP_KEEPALIVE_CNT, 20)
+        self.socket.setsockopt(zmq.TCP_KEEPALIVE_INTVL, 60)
         self.socket.setsockopt_string(zmq.SUBSCRIBE, "")
         self.socket.connect(UPDATE_PUBLISHER)
         self.task_waiting = False

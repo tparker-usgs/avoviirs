@@ -68,7 +68,7 @@ def publish_products(message):
         with open(message_filename, "w") as msg_file:
             msg_file.write(message.encode())
         pilimg = processor.get_image(sector_def)
-        # processor.write_pilimg(pilimg, file_base)
+        processor.write_pilimg(pilimg, file_base)
         processor.write_old_volcview(pilimg, sector_def)
         processor.publish_pilimg(pilimg, file_base, sector_def.area_id)
 

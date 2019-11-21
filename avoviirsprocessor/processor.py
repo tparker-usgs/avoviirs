@@ -87,12 +87,11 @@ def publish_product(filename, pngimg, volcview_args):
     url = DEV_ENDPOINT + "/imageApi/uploadImage"
     print("publishing image to {}".format(url))
     print("data {}".format(volcview_args))
-    # response = requests.post(
-    # url, headers=headers, data=volcview_args, files=files, timeout=POST_TIMEOUT
-    # )
-    # print("server said: {}".format(response.text))
-    # return response
-    return
+    response = requests.post(
+    url, headers=headers, data=volcview_args, files=files, timeout=POST_TIMEOUT
+    )
+    print("server said: {}".format(response.text))
+    return response
 
 
 class Processor(ABC):

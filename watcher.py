@@ -20,8 +20,11 @@ import threading
 from posttroll.message import Message, MessageError
 from avoviirsprocessor.processor import publish_products
 from avoviirsprocessor import logger
-from avoviirsprocessor.coreprocessors import TIR, MIR, BTD, VIS # NOQA
+from avoviirsprocessor.coreprocessors import TIR, MIR, BTD, VIS  # NOQA
 import tomputils.util as tutil
+from pathlib import Path
+
+HEARTBEAT_FILE = "/tmp/heartbeat"
 
 REQUEST_TIMEOUT = 10000
 TASK_SERVER = "tcp://viirscollector:19091"
@@ -32,14 +35,20 @@ class UpdateSubscriber(threading.Thread):
     def __init__(self, context):
         threading.Thread.__init__(self)
         self.socket = context.socket(zmq.SUB)
-        self.socket.setsockopt_string(zmq.SUBSCRIBE, '')
+        self.socket.setsockopt(zmq.TCP_KEEPALIVE, 1)
+        self.socket.setsockopt(zmq.TCP_KEEPALIVE_IDLE, 60)
+        self.socket.setsockopt(zmq.TCP_KEEPALIVE_CNT, 20)
+        self.socket.setsockopt(zmq.TCP_KEEPALIVE_INTVL, 60)
+        self.socket.setsockopt_string(zmq.SUBSCRIBE, "")
         self.socket.connect(UPDATE_PUBLISHER)
         self.task_waiting = False
+        self.queue_length = None
 
     def run(self):
         while True:
             update = self.socket.recv_json()
-            self.task_waiting = update['queue length'] > 0
+            self.task_waiting = update["queue length"] > 0
+            self.queue_length = update["queue length"]
 
 
 def process_message(msg_bytes):
@@ -54,6 +63,7 @@ def process_message(msg_bytes):
         logger.exception("I got a message, but couldn't find the data")
     except KeyError:
         logger.exception("missing data, skipping")
+
     logger.debug("Whew, that was hard. Let rest for 10 seconds.")
     time.sleep(10)
 
@@ -71,21 +81,29 @@ def main():
     task_client = context.socket(zmq.REQ)
     task_client.connect(TASK_SERVER)
 
-    desired_products = tutil.get_env_var('VIIRS_PRODUCTS')
-    desired_products = desired_products.split(',')
+    desired_products = tutil.get_env_var("VIIRS_PRODUCTS")
+    desired_products = desired_products.split(",")
 
     while True:
+        logger.debug("beating heart")
+        Path(HEARTBEAT_FILE).touch()
         if update_subscriber.task_waiting:
-            request = {'desired products': desired_products}
+            logger.debug("tomp says 1")
+            request = {"desired products": desired_products}
             task_client.send_json(request)
+            logger.debug("tomp says 2 {}".format(update_subscriber.queue_length))
             msg_bytes = task_client.recv()
+            logger.debug("tomp says 3")
             if msg_bytes:
                 process_message(msg_bytes)
             else:
+                logger.debug("No job received")
                 time.sleep(1)
+            logger.debug("tomp says 4")
         else:
-            time.sleep(1)
+            logger.debug("Queue empty")
+            time.sleep(5)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

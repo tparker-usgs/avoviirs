@@ -93,6 +93,7 @@ def publish_product(filename, pngimg, volcview_args):
                 data=volcview_args,
                 files=files,
                 timeout=POST_TIMEOUT,
+                verify=False
             )
             print("server said: {}".format(response.text))
         except requests.exceptions.RequestException as e:

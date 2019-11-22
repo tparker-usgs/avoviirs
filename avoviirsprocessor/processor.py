@@ -90,12 +90,16 @@ def publish_product(filename, pngimg, volcview_args):
         print("data {}".format(volcview_args))
         try:
             response = requests.post(
-            url, headers=headers, data=volcview_args, files=files, timeout=POST_TIMEOUT
+                url,
+                headers=headers,
+                data=volcview_args,
+                files=files,
+                timeout=POST_TIMEOUT,
             )
             print("server said: {}".format(response.text))
         except requests.exceptions.RequestException as e:  # This is the correct syntax
             print(e)
-            
+
     return response
 
 

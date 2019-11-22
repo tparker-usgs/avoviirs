@@ -30,8 +30,6 @@ TYPEFACE = "/app/avoviirsprocessor/Cousine-Bold.ttf"
 FONT_SIZE = 14
 COAST_DIR = "/usr/local/gshhg"
 AREA_DEF = "/app/trollconfig/areas.def"
-PROD_ENDPOINT = "http://volcview.wr.usgs.gov/vv-api"
-DEV_ENDPOINT = "http://dev-volcview.wr.usgs.gov/vv-api"
 ORBIT_SLACK = timedelta(minutes=30)
 SECTOR_PROXY = "tcp://viirstools:29292"
 POST_TIMEOUT = 30
@@ -84,7 +82,7 @@ def publish_product(filename, pngimg, volcview_args):
     passwd = tutil.get_env_var("VOLCVIEW_PASSWD")
     headers = {"username": user, "password": passwd}
     files = {"file": (filename, pngimg)}
-    for endpoint in [DEV_ENDPOINT, PROD_ENDPOINT]:
+    for endpoint in tutil.get_env_var("VV_ENDPOINTS").split(","):
         url = endpoint + "/imageApi/uploadImage"
         print("publishing image to {}".format(url))
         print("data {}".format(volcview_args))
@@ -97,7 +95,7 @@ def publish_product(filename, pngimg, volcview_args):
                 timeout=POST_TIMEOUT,
             )
             print("server said: {}".format(response.text))
-        except requests.exceptions.RequestException as e:  # This is the correct syntax
+        except requests.exceptions.RequestException as e:
             print(e)
 
     return response

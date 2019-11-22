@@ -84,13 +84,18 @@ def publish_product(filename, pngimg, volcview_args):
     passwd = tutil.get_env_var("VOLCVIEW_PASSWD")
     headers = {"username": user, "password": passwd}
     files = {"file": (filename, pngimg)}
-    url = DEV_ENDPOINT + "/imageApi/uploadImage"
-    print("publishing image to {}".format(url))
-    print("data {}".format(volcview_args))
-    response = requests.post(
-    url, headers=headers, data=volcview_args, files=files, timeout=POST_TIMEOUT
-    )
-    print("server said: {}".format(response.text))
+    for endpoint in [DEV_ENDPOINT, PROD_ENDPOINT]:
+        url = endpoint + "/imageApi/uploadImage"
+        print("publishing image to {}".format(url))
+        print("data {}".format(volcview_args))
+        try:
+            response = requests.post(
+            url, headers=headers, data=volcview_args, files=files, timeout=POST_TIMEOUT
+            )
+            print("server said: {}".format(response.text))
+        except requests.exceptions.RequestException as e:  # This is the correct syntax
+            print(e)
+            
     return response
 
 

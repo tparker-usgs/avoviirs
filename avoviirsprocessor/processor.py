@@ -83,6 +83,7 @@ def publish_product(filename, pngimg, volcview_args):
     headers = {"username": user, "password": passwd}
     files = {"file": (filename, pngimg)}
     for endpoint in tutil.get_env_var("VV_ENDPOINTS").split(","):
+        pngimg.seek(0)
         url = endpoint + "/imageApi/uploadImage"
         print("publishing image to {}".format(url))
         print("data {}".format(volcview_args))

@@ -21,6 +21,7 @@ from abc import ABC, abstractmethod
 from datetime import timedelta
 import io
 import zmq
+import json
 
 
 GOLDENROD = (218, 165, 32)
@@ -94,9 +95,13 @@ def publish_product(filename, pngimg, volcview_args):
                 data=volcview_args,
                 files=files,
                 timeout=POST_TIMEOUT,
-                verify=False
+                verify=False,
             )
             print("server said: {}".format(response.text))
+            response_msg = json.loads(response.text)
+            print(
+                f"I sent {len(pngimg)} server received {response_msg['imageByteTotal']}"
+            )
         except requests.exceptions.RequestException as e:
             print(e)
 

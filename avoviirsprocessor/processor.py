@@ -100,6 +100,8 @@ def publish_product(filename, pngimg, volcview_args):
         except requests.exceptions.RequestException as e:
             print(e)
 
+        print("file size {} ({})".format(len(pngimg), endpoint))
+
     print("returning {}".format(response))
 
     return response

@@ -96,14 +96,15 @@ def publish_product(filename, pngimg, volcview_args):
                 timeout=POST_TIMEOUT,
                 verify=False,
             )
+            print("TOMP 0")
             print("server said: {}".format(response.text))
+            print("TOMP 1")
+            print("file size {} ({})".format(len(pngimg), endpoint))
+            print("TOMP 2")
         except requests.exceptions.RequestException as e:
             print(e)
 
-        print("file size {} ({})".format(len(pngimg), endpoint))
-
     print("returning {}".format(response))
-
     return response
 
 

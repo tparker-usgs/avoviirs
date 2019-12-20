@@ -99,10 +99,6 @@ def publish_product(filename, pngimg, volcview_args):
                 verify=False,
             )
             print("server said: {}".format(response.text))
-            response_msg = json.loads(response.text)
-            print(
-                f"I sent {len(pngimg)} server received {response_msg['imageByteTotal']}"
-            )
         except requests.exceptions.RequestException as e:
             print(e)
 

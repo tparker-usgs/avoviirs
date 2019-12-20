@@ -21,7 +21,6 @@ from abc import ABC, abstractmethod
 from datetime import timedelta
 import io
 import zmq
-import json
 
 
 GOLDENROD = (218, 165, 32)

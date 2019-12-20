@@ -99,7 +99,7 @@ def publish_product(filename, pngimg, volcview_args):
             print("TOMP 0")
             print("server said: {}".format(response.text))
             print("TOMP 1")
-            print("file size {} ({})".format(len(pngimg), endpoint))
+            print(pngimg)
             print("TOMP 2")
         except requests.exceptions.RequestException as e:
             print(e)

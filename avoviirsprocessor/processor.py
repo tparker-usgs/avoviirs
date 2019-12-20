@@ -87,7 +87,6 @@ def publish_product(filename, pngimg, volcview_args):
         url = endpoint + "/imageApi/uploadImage"
         print("publishing image to {}".format(url))
         print("data {}".format(volcview_args))
-        print("file size {}".format(len(pngimg)))
         try:
             response = requests.post(
                 url,
@@ -100,6 +99,8 @@ def publish_product(filename, pngimg, volcview_args):
             print("server said: {}".format(response.text))
         except requests.exceptions.RequestException as e:
             print(e)
+
+    print("returning {}".format(response))
 
     return response
 

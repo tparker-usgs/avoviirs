@@ -224,6 +224,15 @@ REGION: 250mAKOK {
 	AREA_EXTENT:    (-125000, -100000, 125000, 100000)
 };
 
+REGION: 250mAKTA {
+	NAME:		Takawangha
+	PCS_ID:		250mAKTA
+    PCS_DEF:    proj=laea, lat_0=52, lon_0=-178, a=6371228.0, units=m
+	XSIZE:		1000
+	YSIZE:		800
+	AREA_EXTENT:    (-125000, -100000, 125000, 100000)
+};
+
 #area_extent: (x_ll, y_ll, x_ur, y_ur)
 #echo "-159 56.5" | cs2cs +proj=latlong +datum=WGS84 +to +proj=laea +lat_0=60 +lon_0=-150 +a=6371228.0 +units=m
 

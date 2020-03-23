@@ -94,12 +94,17 @@ def publish_product(filename, pngimg, volcview_args):
                 data=volcview_args,
                 files=files,
                 timeout=POST_TIMEOUT,
-                verify=False
+                verify=False,
             )
+            print("TOMP 0")
             print("server said: {}".format(response.text))
+            print("TOMP 1")
+            print(pngimg)
+            print("TOMP 2")
         except requests.exceptions.RequestException as e:
             print(e)
 
+    print("returning {}".format(response))
     return response
 
 
@@ -320,6 +325,5 @@ class Processor(ABC):
         filename = file_base + ".png"
         pngimg = io.BytesIO()
         pilimg.save(pngimg, format="PNG")
-        pngimg.seek(0)
         publish_product(filename, pngimg, volcview_args)
         self.publisher.send_json(volcview_args)

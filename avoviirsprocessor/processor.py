@@ -21,7 +21,7 @@ from abc import ABC, abstractmethod
 from datetime import timedelta
 import io
 import zmq
-
+from satpy.utils import debug_on
 
 GOLDENROD = (218, 165, 32)
 PNG_DIR = "/viirs/png"
@@ -123,6 +123,7 @@ class Processor(ABC):
     """
 
     def __init__(self, message, product, volcview_band, product_label):
+        debug_on()
         self.message = message
         self.product = product
         self.product_label = product_label

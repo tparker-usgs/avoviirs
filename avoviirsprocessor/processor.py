@@ -262,8 +262,8 @@ class Processor(ABC):
             self.scene.end_time,
             instrument="viirs",
         )
-        print(f"Created overpass {overpass}")
-        print(
+        logger.debug(f"Created overpass {overpass}")
+        logger.debug(
             f"args: {data['platform_name']} :: "
             "{self.scene.start_time} :: {self.scene.end_time}"
         )

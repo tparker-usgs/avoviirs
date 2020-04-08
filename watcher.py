@@ -88,12 +88,9 @@ def main():
         logger.debug("beating heart")
         Path(HEARTBEAT_FILE).touch()
         if update_subscriber.task_waiting:
-            logger.debug("tomp says 1")
             request = {"desired products": desired_products}
             task_client.send_json(request)
-            logger.debug("tomp says 2 {}".format(update_subscriber.queue_length))
             msg_bytes = task_client.recv()
-            logger.debug("tomp says 3")
             if msg_bytes:
                 process_message(msg_bytes)
             else:

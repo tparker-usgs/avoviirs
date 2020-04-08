@@ -262,6 +262,11 @@ class Processor(ABC):
             self.scene.end_time,
             instrument="viirs",
         )
+        print(f"Created overpass {overpass}")
+        print(
+            f"args: {data['platform_name']} :: "
+            "{self.scene.start_time} :: {self.scene.end_time}"
+        )
         sectors = []
         coverage_threashold = float(tutil.get_env_var("COVERAGE_THRESHOLD", 0.1))
         for sector_def in parse_area_file(AREA_DEF):

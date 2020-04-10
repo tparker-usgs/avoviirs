@@ -1,7 +1,7 @@
 REGION: 1kmAKAP {
 	NAME:		Alaska Peninsula
 	PCS_ID:		1kmAKAP
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=56, lon_0=-160, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-500000, -400000, 500000, 400000)
@@ -10,7 +10,7 @@ REGION: 1kmAKAP {
 REGION: 1kmAKEA {
 	NAME:		Eastern Aleutians
 	PCS_ID:		1kmAKEA
-    PCS_DEF:    proj=laea,a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=53, lon_0=-168, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-500000, -400000, 500000, 400000)
@@ -19,7 +19,7 @@ REGION: 1kmAKEA {
 REGION: 1kmAKSC {
 	NAME:		South Central Alaska
 	PCS_ID:		1kmAKSC
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=60, lon_0=-150, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-500000, -400000, 500000, 400000)
@@ -28,7 +28,7 @@ REGION: 1kmAKSC {
 REGION: 1kmAKWA {
 	NAME:		Western Aleutians Aleutians
 	PCS_ID:		1kmAKWA
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=52, lon_0=-180, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-500000, -400000, 500000, 400000)
@@ -37,7 +37,7 @@ REGION: 1kmAKWA {
 REGION: 1kmRUKA {
 	NAME:		Kamchatka Peninsula
 	PCS_ID:		1kmRUKA
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=54, lon_0=160, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-500000, -400000, 500000, 400000)
@@ -46,7 +46,7 @@ REGION: 1kmRUKA {
 REGION: 2kmAKAL {
 	NAME:		Aleutian Islands
 	PCS_ID:		2kmAKAL
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=52, lon_0=-172.5, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-1000000, -800000, 1000000, 800000)
@@ -55,7 +55,7 @@ REGION: 2kmAKAL {
 REGION: 2kmAKGA {
 	NAME:		Gulf of Alaska
 	PCS_ID:		2kmAKGA
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=58, lon_0=-150, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-1000000, -800000, 1000000, 800000)
@@ -64,7 +64,7 @@ REGION: 2kmAKGA {
 REGION: 2kmAKIN {
 	NAME:		Interior Alaska
 	PCS_ID:		2kmAKIN
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=65, lon_0=-155, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-1000000, -800000, 1000000, 800000)
@@ -73,7 +73,7 @@ REGION: 2kmAKIN {
 REGION: 2kmAKSE {
 	NAME:		Southeast Alaska
 	PCS_ID:		2kmAKSE
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=52.5, lon_0=-130, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-1000000, -800000, 1000000, 800000)
@@ -82,7 +82,7 @@ REGION: 2kmAKSE {
 REGION: 5kmAKNP {
 	NAME:		Eastern North Pacific
 	PCS_ID:		5kmAKNP
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=55, lon_0=-150, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-2500000, -2000000, 2500000, 2000000)
@@ -91,7 +91,7 @@ REGION: 5kmAKNP {
 REGION: 250mAKCL {
 	NAME:		Cleveland
 	PCS_ID:		250mAKCL
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=52.75, lon_0=-169.5, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-125000, -100000, 125000, 100000)
@@ -100,7 +100,7 @@ REGION: 250mAKCL {
 REGION: 250mAKPV {
 	NAME:		Pavlof
 	PCS_ID:		250mAKPV
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=55.4, lon_0=-161.8, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-125000, -100000, 125000, 100000)
@@ -109,7 +109,7 @@ REGION: 250mAKPV {
 REGION: 250mAKVN {
 	NAME:		Veniaminof
 	PCS_ID:		250mAKVN
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=56.2, lon_0=-159.4, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-125000, -100000, 125000, 100000)
@@ -118,7 +118,7 @@ REGION: 250mAKVN {
 REGION: 250mAKSH {
 	NAME:		Shishaldin
 	PCS_ID:		250mAKSH
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=54.8, lon_0=-164, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-125000, -100000, 125000, 100000)
@@ -128,7 +128,7 @@ REGION: 250mAKSH {
 REGION: 250mAKBO {
 	NAME:		Bogoslof
 	PCS_ID:		250mAKBO
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=54, lon_0=-168, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-125000, -100000, 125000, 100000)
@@ -137,7 +137,7 @@ REGION: 250mAKBO {
 REGION: 250mAKCE {
 	NAME:		Semisopochnoi
 	PCS_ID:		250mAKCE
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=51.97, lon_0=179.6, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-125000, -100000, 125000, 100000)
@@ -146,7 +146,7 @@ REGION: 250mAKCE {
 REGION: 250mAKCH {
 	NAME:		Chiginagak
 	PCS_ID:		250mAKCH
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=57.15, lon_0=-157, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-125000, -100000, 125000, 100000)
@@ -155,7 +155,7 @@ REGION: 250mAKCH {
 REGION: 2kmBERS {
 	NAME:		Bering Sea
 	PCS_ID:		2kmBERS
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=60, lon_0=-180, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-1000000, -800000, 1000000, 800000)
@@ -164,7 +164,7 @@ REGION: 2kmBERS {
 REGION: 2kmAKNS {
 	NAME:		Arctic Ocean
 	PCS_ID:		2kmAKNS
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=72.5, lon_0=-160, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-1000000, -800000, 1000000, 800000)
@@ -173,7 +173,7 @@ REGION: 2kmAKNS {
 REGION: 1kmCNMI {
 	NAME:		Marianas Islands
 	PCS_ID:		1kmCNMI
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=16.33, lon_0=145.5, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-500000, -400000, 500000, 400000)
@@ -182,7 +182,7 @@ REGION: 1kmCNMI {
 REGION: 2kmRUKA {
 	NAME:		Kamchatka Peninsula 2km
 	PCS_ID:		2kmRUKA
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=55, lon_0=160, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-1000000, -800000, 1000000, 800000)
@@ -191,7 +191,7 @@ REGION: 2kmRUKA {
 REGION: 2kmRUKI {
 	NAME:		Kuril Islands
 	PCS_ID:		2kmRUKI
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=47, lon_0=154, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-1000000, -800000, 1000000, 800000)
@@ -200,7 +200,7 @@ REGION: 2kmRUKI {
 REGION: 5kmRUNP {
 	NAME:		Western North Pacific
 	PCS_ID:		5kmRUNP
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=55, lon_0=170, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-2500000, -2000000, 2500000, 2000000)
@@ -209,7 +209,7 @@ REGION: 5kmRUNP {
 REGION: 250mAKGS {
 	NAME:		Great Sitkin
 	PCS_ID:		250mAKGS
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=52, lon_0=-176.15, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-125000, -100000, 125000, 100000)
@@ -218,16 +218,7 @@ REGION: 250mAKGS {
 REGION: 250mAKOK {
 	NAME:		Okmok
 	PCS_ID:		250mAKOK
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
-	XSIZE:		1000
-	YSIZE:		800
-	AREA_EXTENT:    (-125000, -100000, 125000, 100000)
-};
-
-REGION: 250mAKTA {
-	NAME:		Takawangha
-	PCS_ID:		250mAKTA
-    PCS_DEF:    proj=laea, a=6371228.0, units=m
+    PCS_DEF:    proj=laea, lat_0=53.4, lon_0=-168, a=6371228.0, units=m
 	XSIZE:		1000
 	YSIZE:		800
 	AREA_EXTENT:    (-125000, -100000, 125000, 100000)
@@ -247,4 +238,3 @@ REGION: 250mAKTA {
 
 # 250m
 #  AREA_EXTENT:    (-125000, -100000, 125000, 100000)
-
